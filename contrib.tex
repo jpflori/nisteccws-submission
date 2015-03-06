@@ -47,7 +47,7 @@ without weakening too much its security.
 
 In all the remainder of this section,
 we shall use the following notations:
-$p$~is a prime number,
+$p ≥ 5$~is a prime number,
 $k = \F_{p}$ is the finite field with $p$~elements,
 $E: y^2 = x^3 + a\,x + b$~is an elliptic curve defined over~$k$,
 $N = \abs{E(\F_p)}$~is the order of the group of rational points of~$E$,
@@ -57,6 +57,20 @@ and $q$~is the largest prime divisor of~$N$.
 %>>>2
 
 \subsection{Hardness of the discrete logarithm problem}
+
+We give here a list of conditions corresponding to
+known attacks on the discrete logarithm problems.
+We point out that some criteria commonly required
+for generating elliptic curves,
+such as the criteria on the discriminant and class number~\cite{rfc5639},
+are not known to lead to a direct attack.
+Therefore, we included those criteria
+in the “normality” section (\ref{ss:normal}) below.
+for elliptic curves
+such as the criteria about the discriminant and class number
+
+\XXX pollard rho petit discriminant
+
 \label{ss:dlp}
 \subsubsection{Non-zero discriminant}
 
@@ -88,8 +102,7 @@ by $\frac{0.44}{\log p}$.
 
 If $N = p$ then there exists an \emph{additive transfer}
 reducing the discrete logarithm in~$E(k)$
-to that in the additive group.
-
+to that in the additive group of~$\F_p$.
 Therefore, elliptic curves with trace~$1$ must be excluded.
 
 \subsubsection{Absence of multiplicative transfer}
@@ -104,7 +117,13 @@ Therefore, elliptic curves with an embedding degree small enough
 that discrete logarithms are computable in $\F_{p^e}^{×}$
 must be excluded.
 
-\XXX estimation ?
+Over the base field~$\F_p$, the supersingular curves
+are exactly the curves with trace zero,
+which have an embedding degree~one.
+
+\subsubsection{XEDNI}
+
++ Slides ECC 2001 avec trappage de courbe Silverman
 
 \subsection{Resistance to common side-channel attacks}
 \label{ss:side}
@@ -118,14 +137,19 @@ where $d$~is a non-square element of~$k$.
 For a given abscissa~$x_0$,
 exactly one of the curves~$E, E'$ contains a point~$(x_0, y)$.
 
-An attacker can manipulate a protocol into using the twist~$E'$
+An attacker may manipulate a badly written implementation
+into using the twist~$E'$
 in place of the original curve~$E$,
 either through side-channel attacks~\cite{fdtc2008flrv},
-or through man-in-the-middle attack on a badly designed protocol.
+or through attacks on a badly designed protocol.
 
-If the twist~$E'$ of~$E$ satisfies
+A supplementary layer of protection against these attacks
+is the fact that the twist~$E'$ satisfy
 the same security conditions as the curve~$E$ itself, then
 none of these attacks apply to the curve~$E$.
+
+\XXX ne protège pas contre toutes les attaques de changement de courbe
+\XXX les deux n'auront pas les mêmes comportements side-channel ($b^2$)
 
 Using a variant of the technique of Galbraith and McKee~\cite{lms2000gm},
 we find that the probability that a random elliptic curve on~$\F_p$
@@ -139,6 +163,9 @@ In particular, in view of
 the certificates mentioned in section~\ref{s:certif},
 both the size and the cost of validation of the certificate
 increase by a linear factor.
+Although this property of twist-security is quite rare,
+the curves satisfying it are not special
+in the sense of section~\ref{ss:normal}.
 
 \subsubsection{Special points}
 \label{sss:special-points}
@@ -149,13 +176,25 @@ In the presence of such special points,
 there exist side-channel attacks~\cite{pkc2003goubin}
 exposing private information.
 
+\XXX ce n'est pas la seule protection
+
 Special points of the form~$(x, 0)$ exist if the curve has
 an even order.
 Special points of the form~$(0, y)$ exist if the coefficient~$b$
 is a square in~$k$.
 
+\subsubsection{Special base field}
+\label{sss:special-side}
+
+\XXX
+
+\subsubsection{Unified group law}
+\label{sss:unified}
+
 \subsection{Normality of the curve}
 \label{ss:normal}
+
+\XXX cardinal de la tordue non friable
 
 The criteria we present here do not correspond to
 known attacks on elliptic curves.
@@ -166,7 +205,7 @@ should reject a negligible proportion of curves;
 this means that we expect that any computations needed here
 will be done only once, for the final elliptic curve.
 If on the other hand a curve does not satisfy one of these conditions
-then, even although we do not know any precise attack,
+then, even though we do not know any precise attack,
 this curve is slightly more likely to be vulnerable.
 
 Keeping in mind that the discrete logarithm in~$E(k)$
@@ -219,13 +258,14 @@ then its endomorphism ring is the maximal order~$\ro O_K$ of~$K$.
 % d'ordre ℓ. Or, puisque N est premier, E(k) ne contient aucun tel
 % sous-groupe. ⚡
 Its class number~$h(K)$ is the minimal degree
-of a number field over which $E$~admits a faihful lift.
+of a number field over which $E$~admits a faithful lift.
 It is also the degree of the Hilbert class polynomial
 used in the theory of complex multiplication.
 Therefore, a large class number may prevent the use
 of any attacks based on complex multiplication.
-The best method we know to compute the class number
-is subexponential~\cite{chile2009biasse}
+Under the generalized Riemann hypothesis,
+the best method we know to compute the class number
+is subexponential~\cite{chile2009biasse},
 and requires at least a few days of computation for cryptographic sizes.
 Since this method also computes the group stucture
 of the ideal class group of~$\ro O_K$,
@@ -263,14 +303,21 @@ The number of multiplications required in~$\Cl K$
 is approximately~$\log M ≈ \frac{B}{\log B} \log C = O(\log^2 p)$.
 
 
-\subsubsection{Parameters of a special form}
-\label{sss:special-prime}
+\subsubsection{Special base field}
+\label{sss:special-anormal}
+
+\XXX cardinal spécial = CM ?
 
 In the case of the \emph{multiplicative} discrete logarithm problem,
 the Special Number Field Sieve allows faster computations
 of discrete logarithms modulo~$p$
 when $p$~is a \emph{special} prime number,
 \emph{i.e.} when it is a value of a polynomial with small coefficients.
+
+This means that elliptic curves whose base field
+has a special prime number as its characteristic
+are
+
 
 It is hard to check whether a given prime number is special.
 However, most prime numbers used in standard elliptic curves
@@ -279,12 +326,15 @@ are explictly given as special primes.
 Even though we don't know any attack against curves with special parameters,
 it is possible that some might exist.
 
-\subsection{Embedding degree}
+\subsubsection{Embedding degree}
 
-\XXX
+For any bound~$m$, the probability that
+the embedding degree of~$E$ is at most~$m$
+is~\cite{jcrypto1998bk} $O(m^2 · p^{-1}·(\log p)^5·(\log\log p)^2)$.
+This implies that, with probability~$1 - 1/√p$,
+the embedding degree of~$E$ is at least~$p^{1/4 - ε}$.
+
 \subsubsection{Multiplicative group of the base field}
-
-\XXX vérifier avec~$u^{-u}$.
 
 The multiplicative structure of the base field~$\F_p^{×}$
 is directly related to the factorization of~$p-1$.
@@ -299,12 +349,12 @@ $(p-1)$~has at least one prime divisor greater than~$(\log p)^2$.
 \subsection{Convenience of implementation}
 \label{ss:convenience}
 
-We list here a few criteria that,
-may make its implementation more convenient
-without weakening the security of the curve itself.
+We list here a few criteria that
+may make the implementation of an elliptic curve more convenient
+without weakening the security.
 In order to not weaken the ``normality'' of the curves,
 we consider only these conditions which are satisfied
-by an asymptotically constant proportion of all elliptic curves.
+by an asymptotically non-zero proportion of all elliptic curves.
 
 \subsubsection{Fast Jacobian coordinates}
 
@@ -345,21 +395,35 @@ For example, about~$35\%$ of all elliptic curves
 are isomorphic to a twisted Edwards curve,
 and about~$40\%$ are isomorphic to a Montgomery curve.
 % source: own research
+\XXX source (own research!)
 
-We point out, however, that in the case of a non-prime base field,
-there exist some attacks~\cite{jcrypto2014fghr}
-against several of these curve families
-which somewhat weaken the discrete logarithm problem.
-Although none of these attack applies to a prime field,
-this casts a doubt on these non-generic families of curves.
-
-Moreover, each of these families requires at least
+Each of these families requires at least
 the presence of a point of order two on the curve.
 This is a special point in the sense of~\ref{sss:special-points} above
 and could introduce a weakness in some contexts.
+Moreover, in the case of a non-prime base field,
+there exist some attacks~\cite{jcrypto2014fghr}
+against several of these curve families
+which somewhat weaken the discrete logarithm problem.
 
-\subsection{Curves with particular properties}
+\XXX pollard rho accéléré ?
+
+\subsubsection{Fast base field arithmetic}
+\label{sss:special-fast}
+
+\XXX nombres premiers spéciaux
+
+\subsubsection{Small coefficients}
+
+\XXX
+
+\subsection{Families of curves with particular properties}
 \label{ss:particular}
+
+We give here a short list of families of curves
+with particular properties which may be useful in some specific contexts.
+These families are small enough
+to contradict the ``normality'' conditions of section~\ref{ss:normal}.
 
 \subsubsection{Curves for pairing-based cryptography}
 
@@ -401,52 +465,33 @@ and the computation of the class number
 
 \subsection{Certifying the curve order}
 
-Some of the most efficient methods to compute the curve order are
+\XXX composite souvent, prime une fois
+
+\subsubsection{Composite curve order}
+
+Over a prime base field,
+the most efficient methods to compute the curve order are
 variants of the $ℓ$-adic SEA algorithm~\cite{mathcomp1985schoof,
 jtnb1995schoof}.
 This algorithm computes the order~$N$ of the curve
 by computing $N \pmod{ℓ}$ for several
 auxiliary primes~$ℓ < O(\log p)$.
+The fact that $N$~is composite may therefore be detected
+either in an early step,
+when there exists~$ℓ$ such that $N ≡ 0 \pmod{ℓ}$,
+or at the end of the computation,
+when we find that the computed value~$N$ is composite.
 
-\subsubsection{Prime curve order}
-When the algorithm finds that the value~$N$ is prime,
-a certificate is as follows: $(N, G, Π)$,
-where $N$~is the number of points,
-$G$~is a point of order~$N$ (for example, any random non-zero point),
-and $Π$~is a proof of primality of~$N$
-(which may be left empty if $p$~is small enough
-that proving its primality directly is easier than using a certificate).
-The validation program then checks that $G ≠ 0$,
-$N · G = 0$, and~$N > (√p+1)^2 / 2$.
-If this is the case, then $N$~is the curve order.
-
-We expect that all non-prime curve orders
-will be rejected by a pseudoprimality test such as the Miller-Rabin test.
-Therefore, the generating program will have to run the primality proof
-only once, for the last curve.
-Proving the primality is practical using a test such as
-the APR-CL test~\cite{fcs1980adleman,mathcomp1984cl}.
-In the case where the validation program runs under strong contraints,
-it is also possible to write a primality certificate
-in a form such as ECPP~\cite{mathcomp1993am},
-which has a reasonable size~($O(\log^2 p)$ bits)
-and is verifiable in a short time~($O(\log^2 p)$ field operations).
-
-\subsubsection{Composite curve order}
-
-The “early” case is when the curve order is
-divisible by one of the auxiliary primes~$ℓ$.
-In this case, we detect that~$N ≡ 0 \pmod{ℓ}$ early in the algorithm,
-without computing the full value of~$N$.
-The counting algorithm also gives a polynomial~$f$, of degree~$(ℓ-1)/2$,
-whose roots are the abscissaes of all $ℓ$-torsion points of~$E$.
+In the “early” case,
+the counting algorithm finds a polynomial~$f$, of degree~$(ℓ-1)/2$,
+whose roots are the abscissae of $ℓ$-torsion points of~$E$.
 We may then recover one of these points by
 computing one factor of~$f$ of degree~$1$:
 using the Cantor-Zassenhaus polynomial factorization algorithm,
 we find that the complexity of this operation
 is approximately the same as that of computing~$N \pmod{ℓ}$,
 so that computing this extra information
-does not significantly slow down the computation of~$N$.
+has a small impact on computation time.
 
 \smallskip
 
@@ -456,8 +501,10 @@ The counting algorithm will then compute the exact value~$N$.
 A simple pseudo-random proof of composition,
 such as the Miller-Rabin test,
 will then suffice to prove that $N$~is composite.
-This case is less frequent than the “early“ case;
-it happens with probability approximately~$\frac{C}{\log \log p}$.
+This case is less frequent than the “early” case;
+it happens with probability
+asymptotically equivalent to~$\frac{C}{\log \log p}$,
+and in a few percent of cases for cryptographic sizes.
 % calcul douteux -> 0.56/log log p, soit 11% pour 2^256.
 
 \smallskip
@@ -476,13 +523,39 @@ is verifiable using~$O(\log ℓ) = O(\log \log p)$ operations in the base field;
 else, $O(\log p)$~operations are needed.
 
 
+\subsubsection{Prime curve order}
+We expect that all non-prime curve orders
+will be rejected by a pseudoprimality test such as the Miller-Rabin test.
+Therefore, the generating program will have to run the primality proof
+only once, for the last curve.
+
+When the algorithm finds that the value~$N$ is prime,
+a certificate is as follows: $(N, G, Π)$,
+where $N$~is the number of points,
+$G$~is a point of order~$N$ (for example, any random non-zero point),
+and $Π$~is a proof of primality of~$N$
+(which may be left empty if $p$~is small enough
+that proving its primality directly is easier than using a certificate).
+The validation program then checks that $G ≠ 0$,
+$N · G = 0$, and~$N > (√p+1)^2 / 2$.
+If this is the case, then $N$~is the curve order.
+
+For the sizes involved in elliptic curve cryptography,
+proving the primality is practical using a test such as
+the APR-CL test~\cite{fcs1980adleman,mathcomp1984cl}.
+In the case where the validation program runs under strong contraints,
+it is also possible to write a primality certificate
+in a form such as ECPP~\cite{mathcomp1993am},
+which has a reasonable size~($O(\log^2 p)$ bits)
+and is verifiable in a short time~($O(\log^2 p)$ field operations).
+
 \subsection{Fundamental discriminant and class group}
 
 The fundamental discriminant is given by
 the factorization of the discriminant~$D = t^2 - 4 p$.
 While computing this factorization is quite expensive,
 (and asymptotically dominates the whole generation process),
-it will be performed only once, on the final curve,
+it will generally be performed only once, on the final curve,
 and validating the factorization is extremely easy.
 
 The knowledge of the fundamental discriminant gives a lower bound
