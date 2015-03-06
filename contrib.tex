@@ -104,6 +104,8 @@ Therefore, elliptic curves with an embedding degree small enough
 that discrete logarithms are computable in $\F_{p^e}^{×}$
 must be excluded.
 
+\XXX estimation ?
+
 \subsection{Resistance to common side-channel attacks}
 \label{ss:side}
 
@@ -160,15 +162,21 @@ known attacks on elliptic curves.
 Rather, they are properties that random curves should verify
 with overwhelming probability.
 When generating curves, checking for these conditions
-should involve a negligible number of rejected curves.
-On the contrary, if a curve does not satisfy one of these conditions,
-then even although we do not know any precise attack,
+should reject a negligible proportion of curves;
+this means that we expect that any computations needed here
+will be done only once, for the final elliptic curve.
+If on the other hand a curve does not satisfy one of these conditions
+then, even although we do not know any precise attack,
 this curve is slightly more likely to be vulnerable.
 
 Keeping in mind that the discrete logarithm in~$E(k)$
 has an expected complexity of~$O(√q)$,
 we reject as ``too special'' those curves
 which satisfy exceptional properties with probability~$≤ 1/√q$.
+We focus on those properties which might make
+various number-theoretic computations easier,
+such as a group related to the elliptic curve
+having an unusually smooth order.
 
 \subsubsection{Discriminant and class number}
 \label{sss:class}
@@ -212,11 +220,23 @@ then its endomorphism ring is the maximal order~$\ro O_K$ of~$K$.
 % sous-groupe. ⚡
 Its class number~$h(K)$ is the minimal degree
 of a number field over which $E$~admits a faihful lift.
+It is also the degree of the Hilbert class polynomial
+used in the theory of complex multiplication.
+Therefore, a large class number may prevent the use
+of any attacks based on complex multiplication.
+The best method we know to compute the class number
+is subexponential~\cite{chile2009biasse}
+and requires at least a few days of computation for cryptographic sizes.
+Since this method also computes the group stucture
+of the ideal class group of~$\ro O_K$,
+it can be used to produce a small and easily verifiable certificate
+for the class number.
 % It is related to the class number~$h(\ro O_K)$ of the maximal order
 % by a simple formula~\cite[7.24]{cox1989primes}:
 % if $R$~is the order of conductor~$f$, then
 % $h(R) = h(\ro O_K) f ∏ (1 - \pa{\frac{D_K}{p}}/p)$
-The class number of~$K$ is minorated~\cite{cras1990louboutin},
+On the other hand,
+the class number of~$K$ is minorated~\cite{cras1990louboutin},
 under the generalized Riemann hypothesis,
 by~$h(K) ≥ \frac{π}{3e} \frac{√{\abs{D_K}}}{\log \abs{D_K}}$.
 
@@ -259,7 +279,10 @@ are explictly given as special primes.
 Even though we don't know any attack against curves with special parameters,
 it is possible that some might exist.
 
-\subsubsection{Normality of the base field}
+\subsection{Embedding degree}
+
+\XXX
+\subsubsection{Multiplicative group of the base field}
 
 \XXX vérifier avec~$u^{-u}$.
 
@@ -268,11 +291,10 @@ is directly related to the factorization of~$p-1$.
 In particular, if $p-1$~is smooth
 (\emph{i.e.} all its prime divisors are small),
 then the multiplicative discrete logarithm problem is easy.
-We check~\cite{jnt1983cep} that
-$(p-1)/2$~is $\pa{\log p}^2$-smooth with probability $1/√p$.
+Let~$B$ be a smoothness bound: then, with~$u = \log p / \log B$,
+$(p-1)$~is $B$-smooth with probability~$≈ u^{-u}$~\cite{jnt1983cep}.
 This means that, with overwhelming probability,
-for a random number~$p$, we expect that~$(p-1)$
-has at least one prime divisor greater than~$(\log p)^2$.
+$(p-1)$~has at least one prime divisor greater than~$(\log p)^2$.
 
 \subsection{Convenience of implementation}
 \label{ss:convenience}
