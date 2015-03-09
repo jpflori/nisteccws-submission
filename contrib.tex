@@ -98,6 +98,8 @@ The probability that a random elliptic curve over~$\F_p$
 has a prime group order is bounded below~\cite{lms2000gm}
 by $\frac{0.44}{\log p}$.
 
+This condition is the most restrictive in practical use.
+
 \XXX complexité
 
 \subsubsection{Absence of additive transfer}
@@ -146,7 +148,7 @@ For a given abscissa~$x_0$,
 exactly one of the curves~$E, E'$ contains a point~$(x_0, y)$.
 
 An attacker may manipulate a badly written implementation
-into using the twist~$E'$
+into using the quadratic twist~$E'$
 in place of the original curve~$E$,
 either through side-channel attacks~\cite{fdtc2008flrv},
 or through attacks on a badly designed protocol.
@@ -155,9 +157,12 @@ A supplementary layer of protection against these attacks
 is the fact that the twist~$E'$ satisfy
 the same security conditions as the curve~$E$ itself, then
 none of these attacks apply to the curve~$E$.
-
-\XXX ne protège pas contre toutes les attaques de changement de courbe
-\XXX les deux n'auront pas les mêmes comportements side-channel ($b^2$)
+We note however that this property
+does not protect against all curve-changing attacks.
+Moreover, the curve and its quadratic twist
+do not have the same side-channel behaviour,
+since exactly one of the two curves
+contains a special point of the form~$(0, y)$.
 
 Using a variant of the technique of Galbraith and McKee~\cite{lms2000gm},
 we find that the probability that a random elliptic curve on~$\F_p$
@@ -184,7 +189,9 @@ In the presence of such special points,
 there exist side-channel attacks~\cite{pkc2003goubin}
 exposing private information.
 
-\XXX ce n'est pas la seule protection
+Several protections against these attacks exist \XXX.
+One of them is simply ensuring that the curve does not contain
+any special point.
 
 Special points of the form~$(x, 0)$ exist if the curve has
 an even order.
@@ -198,6 +205,8 @@ is a square in~$k$.
 
 \subsubsection{Unified group law}
 \label{sss:unified}
+
+\XXX
 
 \subsection{Normality of the curve}
 \label{ss:normal}
@@ -238,6 +247,12 @@ any algorithm involving polynomials or matrices of this size
 would be easy to implement.
 We instead use the smoothness bound~$B = p^{1/4}$,
 corresponding to a probability of~$1/256$.
+This means that we expect that $1/256$~of pseudo-random elliptic curves
+will be rejected as ``too exceptional'',
+while any variant of index calculus in these groups
+will involve matrices of size about~$p^{1/4}$,
+which is possible to keep out of reach for reasonable values of~$p$.
+
 % We could instead balance the smoothness bound~$B = n^{1/u}$
 % such that the probability of smoothness~$u^{-u}$ is~$1/B$.
 % Using this estimate,
@@ -255,6 +270,7 @@ We recall from paragraph~\ref{sss:twist} above
 that the smoothness of this number may have a direct influence
 on the efficacity of some side-channel attacks.
 
+\XXX
 
 \subsubsection{Discriminant of the endomorphism ring}
 \label{sss:discriminant}
