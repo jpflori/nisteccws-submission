@@ -1,8 +1,0 @@
-unset key
-set term wxt 0
-plot [.2:.5] 'twist2.dat' u (1/$2):1 smooth cumulative
-set term wxt 1
-plot 'twist2.dat' u (log($1)/log(2)):(1/$2) w p pt 0
-pause 3
-replot
-reread
