@@ -57,6 +57,7 @@ and $q$~is the largest prime divisor of~$N$.
 %>>>2
 
 \subsection{Hardness of the discrete logarithm problem}
+\label{ss:dlp}
 
 We give here a list of conditions corresponding to
 known attacks on the discrete logarithm problems.
@@ -73,7 +74,6 @@ such as the criteria about the discriminant and class number
 
 \XXX trap Weil descent
 
-\label{ss:dlp}
 \subsubsection{Nonsingular curve}
 
 If the discriminant~$4\, a^3 + 27\,b^2$
@@ -202,8 +202,6 @@ is a square in~$k$.
 \subsection{Normality of the curve}
 \label{ss:normal}
 
-\XXX cardinal de la tordue non friable
-
 The criteria we present here do not correspond to
 known attacks on elliptic curves.
 Rather, they are properties that random curves should verify
@@ -216,34 +214,49 @@ If on the other hand a curve does not satisfy one of these conditions
 then, even though we do not know any precise attack,
 this curve is slightly more likely to be vulnerable.
 
-Keeping in mind that the discrete logarithm in~$E(k)$
-has an expected complexity of~$O(√q)$,
-we reject as ``too special'' those curves
-which satisfy exceptional properties with probability~$≤ 1/√q$.
-We focus on those properties which might make
-various number-theoretic computations easier.
-
-Several of these properties involve the smoothness of
-some number attached to the elliptic curve,
-for example the order of its quadratic twist.
+Many common number-theoretic computations depend on
+the factorization of a parameter (for example, the order of some group),
+and become easier when this parameter is smooth
+(\emph{i.e.} when it has only small prime divisors).
 We recall here~\cite{jnt1983cep} that the probability that
 a number~$n$ be~$B$-smooth is approximately~$u^{-u}$,
 where $u ≃ \log n / \log B$.
-In particular, a number~$n ≈ p^{α}$ only has a probability~$≈ 1/√p$
-of being~$(\frac{\log p}{2\log\log p})^{2α}$-smooth.
+
+We must determine a threshold at which the factorization of these
+numbers is considered ``too smooth''.
+The first choice for a probability threshold would be
+of the order of~$1/√p$, corresponding to the complexity of
+the discrete logarithm in the group~$E(k)$.
+% For example, for a fixed exponent~$α$,
+% a number~$x ≈ p^{α}$ only has a probability~$≈ 1/√p$
+% of being~$(\frac{\log p}{2\log\log p})^{2α}$-smooth.
+However, numeric computations suggest that this choice may be too lenient:
+for random numbers of 256~bits, the threshold probability of~$2^{-128}$
+corresponds to numbers which are~$727$-smooth.
+In a computational view, this bound is extremely low:
+any algorithm involving polynomials or matrices of this size
+would be easy to implement.
+We instead use the smoothness bound~$B = p^{1/4}$,
+corresponding to a probability of~$1/256$.
+% We could instead balance the smoothness bound~$B = n^{1/u}$
+% such that the probability of smoothness~$u^{-u}$ is~$1/B$.
+% Using this estimate,
+% we could say that
+% a random number of $256$~bits should not be $2^{28}$-smooth
+% and that a random number of $512$~bits should not be $2^{42}$-smooth.
+% We think that more research is needed on this subject.
 
 \subsubsection{Cardinality of the quadratic twist}
 \label{sss:twist-smooth}
 
 The order of the quadratic twist of~$E$ is~$2(p+1) - n$.
-This number has a negligible probability
-of being~$(\log p)^{2 - o(1)}$-smooth.
 
 We recall from paragraph~\ref{sss:twist} above
 that the smoothness of this number may have a direct influence
 on the efficacity of some side-channel attacks.
 
-\subsubsection{Discriminant and class number}
+
+\subsubsection{Discriminant of the endomorphism ring}
 \label{sss:discriminant}
 
 The \emph{endomorphism field} of the curve~$E$
@@ -309,25 +322,26 @@ by~$h(K) ≥ \frac{π}{3e} \frac{√{\abs{D_K}}}{\log \abs{D_K}}$.
 
 \medbreak
 
-One last property to check is that the class number~$h$ is not smooth.
-Let~$B = O(\log p)$ be a smoothness bound and~$u = \log h / \log B$.
-Then $h$~is $B$-smooth with probability~$≈ u^{-u}$,
-which is negligible.
-While the best algorithm we know for computing the class number
-is sub-exponential\XXX,
-it is possible to prove that $h$~is not $B$-smooth in polynomial time.
-Namely, let~$C = √p$ be an upper bound on~$h$;
-for each prime~$ℓ < B$, let~$e(ℓ)$ be the smallest integer
-such that~$ℓ^{e(ℓ)} > C$;
-and define~$M$ as the product of all~$ℓ^{e(ℓ)}$.
-If $h$~is $B$-smooth, then all elements of the class group~$\Cl K$
-have $M$-torsion.
-Therefore, any element~$g$ of the class group such that~$M g ≠ 0$
-proves that $h$~is not $B$-smooth.
-Since we expect that $\Cl K$~is almost cyclic,
-in general we need to check this for only one element~$g$.
-The number of multiplications required in~$\Cl K$
-is approximately~$\log M ≈ \frac{B}{\log B} \log C = O(\log^2 p)$.
+The class number has a negligible probability
+of being~$(\log p)^{1-o(1)}$-smooth.
+While the best known algorithms for computing the class number
+are sub-exponential~\cite{chile2009biasse},
+for a polynomial bound~$B$,
+it is possible to prove that $h$~is not $B$-smooth
+in time~$O(B \log p)$, which is polynomial.
+% it is possible to prove in polynomial time that $h$~is not $B$-smooth in polynomial time.
+% Namely, for each prime~$ℓ < B$, let~$e(ℓ)$ be
+% the smallest integer such that~$ℓ^{e(ℓ)} > h$;
+% and define~$M$ as the product of all~$ℓ^{e(ℓ)}$.
+% Since~$h = O(√p)$, we see that~$\log M ≈ \frac{B}{2 \log B} \log p$.
+% If $h$~is $B$-smooth, then all elements of the class group~$\Cl K$
+% have $M$-torsion.
+% Therefore, any element~$g$ of the class group such that~$M g ≠ 0$
+% proves that $h$~is not $B$-smooth.
+% Since we expect that $\Cl K$~is almost cyclic,
+% in general we need to check this for only one element~$g$.
+% The number of multiplications required in~$\Cl K$
+% is approximately~$\log M ≈ O(\log^2 p)$.
 
 
 \subsubsection{Special base field}
@@ -340,10 +354,6 @@ the Special Number Field Sieve allows faster computations
 of discrete logarithms modulo~$p$
 when $p$~is a \emph{special} prime number,
 \emph{i.e.} when it is a value of a polynomial with small coefficients.
-
-This means that elliptic curves whose base field
-has a special prime number as its characteristic
-are
 
 
 It is hard to check whether a given prime number is special.
@@ -359,7 +369,7 @@ For any bound~$m$, the probability that
 the embedding degree of~$E$ is at most~$m$
 is~\cite{jcrypto1998bk} $O(m^2 · p^{-1}·(\log p)^5·(\log\log p)^2)$.
 This implies that, with probability~$1 - 1/√p$,
-the embedding degree of~$E$ is at least~$p^{1/4 - ε}$.
+the embedding degree of~$E$ is at least~$p^{1/4 - o(1)}$.
 
 \subsubsection{Multiplicative group of the base field}
 
