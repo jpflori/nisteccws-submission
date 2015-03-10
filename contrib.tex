@@ -98,10 +98,11 @@ We point out that some criteria commonly required
 for generating elliptic curves,
 such as the criteria on the discriminant and class number~\cite{rfc5639},
 are not known to lead to a direct attack.
+Nonetheless, the usual bound chosen for these criteria are met
+by a randomly chosen curve with overwhelming probability.
 Therefore, we included those criteria
-in the “normality” section (\ref{ss:normal}) below.
-for elliptic curves
-such as the criteria about the discriminant and class number
+in the “normality” section (\ref{ss:normal}) below
+and their abscence here is not problematic.
 
 \XXX pollard rho petit discriminant
 
@@ -129,15 +130,14 @@ For a given curve~$E$, checking if this is the case
 requires computing the group order~$N$,
 which is a moderately expensive task.
 For curves over large prime field, the most efficient algorithms are variations
-of the SEA algorithm~\cite{smf2008cl} with complexity~$O(\log(q)^4)$.
+of the SEA algorithm~\cite{mathcomp1985schoof,
+jtnb1995schoof,smf2008cl} with complexity~$O(\log(q)^4)$.
 
 The probability that a random elliptic curve over~$\F_p$
 has a prime group order is bounded below~\cite{lms2000gm}
 by $\frac{0.44}{\log p}$.
 
 This condition is the most restrictive in practical use.
-
-\XXX complexité
 
 \subsubsection{Absence of additive transfer}
 
@@ -162,9 +162,12 @@ Over the base field~$\F_p$, the supersingular curves
 are exactly the curves with trace zero,
 which have an embedding degree~one.
 
-\subsubsection{XEDNI}
+\subsubsection{Index calculus}
 
-+ Slides ECC 2001 avec trappage de courbe Silverman
+It is possible to perform index calculus on a lift of the curve.
+Nonetheless, in the current state of art, it is more expensive
+to correctly lift the curve and the points defining the DLP than
+to directly solve it~\cite{asia1998ss,dcc2000silverman,dcc2000ksst,ecc2007silverman,sac2008silverman,}.
 
 \subsection{Resistance to common side-channel attacks}
 \label{ss:side}
@@ -611,7 +614,7 @@ and the computation of the class number
 Over a prime base field,
 the most efficient methods to compute the curve order are
 variants of the $ℓ$-adic SEA algorithm~\cite{mathcomp1985schoof,
-jtnb1995schoof}.
+jtnb1995schoof,smf2008cl}.
 This algorithm computes the order~$N$ of the curve
 by computing $N \pmod{ℓ}$ for several
 auxiliary primes~$ℓ < O(\log p)$.
