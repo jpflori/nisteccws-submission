@@ -41,7 +41,7 @@ as particular and therefore maybe particularly vulnerable
 to some yet-unknown attack.
 Finally, the last two categories group some properties
 which may be desirable about the curve,
-either for facilitating its implementation~(\ref{ss:convenience}
+either for facilitating its implementation~(\ref{ss:convenience})
 or for specific protocols and algorithms~(\ref{ss:particular}),
 without weakening too much its security.
 
@@ -56,13 +56,15 @@ These may either be chosen pseudo-randomly,
 as a precaution against some side-channel attacks~(\ref{sss:special-side})
 or against some possible future attacks~(\ref{sss:special-anormal});
 or very small values may be chosen instead,
-in the view of faster curve arithmetic.
+in the view of faster curve arithmetic~(\ref{sss:special-fast}).
 
 \paragraph{Cofactor.}
 While the existence of a very small torsion subgroup
-may lead to some side-channel attacks,
-it is a necessary condition for availability
-of some faster curve coordinates such as Edwards or Montgomery curves.
+may lead to some attacks such as
+small-subgroup attack or side-channel attacks~(\ref{sss:special-points}),
+it is a necessary condition for the availability
+of some faster curve coordinates
+such as Edwards or Montgomery curves~(\ref{sss:other-eq}).
 
 \paragraph{Primality of the order of the quadratic twist.}
 In general, we expect that the order of the quadratic twist
@@ -70,12 +72,18 @@ will have at least one large prime divisor,
 for example larger than~$p^{1/4}$ (\ref{sss:normal-twist}).
 If this order is itself a prime number,
 then this grants a supplementary layer of protection
-against some side-channel attacks.
+against some side-channel attacks (\ref{sss:twist}).
 However, this property is relatively rare itself
 (by a linear factor in~$\log p$),
 which could raise concern that
-twist-prime curves are themselves exceptional in some way.
-We do not think that this danger
+curves with a prime twist are themselves exceptional in some way.
+
+Because of all these contradictory conditions,
+we think that several curves and curve families should be used,
+so that each user might select the appropriate curve
+depending on the context,
+such as performance constraints or the likelihood of side-channel attacks.
+
 
 \subsection*{Notations}
 In all the remainder of this section,
@@ -136,7 +144,6 @@ jtnb1995schoof,smf2008cl} with complexity~$O(\log(q)^4)$.
 The probability that a random elliptic curve over~$\F_p$
 has a prime group order is bounded below~\cite{lms2000gm}
 by $\frac{0.44}{\log p}$.
-
 This condition is the most restrictive in practical use.
 
 \subsubsection{Absence of additive transfer}
@@ -233,7 +240,7 @@ In the presence of such special points,
 there exist side-channel attacks~\cite{pkc2003goubin}
 exposing private information.
 
-Several protections against these attacks exist \XXX.
+Several protections against these attacks exist~\cite{ches2004mmm}.
 One of them is simply ensuring that the curve does not contain
 any special point.
 
@@ -246,7 +253,7 @@ is a square in~$k$.
 \label{sss:special-side}
 
 Some common parameter choices,
-such as the NIST elliptic curves~\cite{2000fips186-2},
+such as the NIST elliptic curves~\cite{nist2000fips186-2},
 use as their base field a prime field~$\F_p$
 where $p$~is a prime number of a ``special form'',
 such as a Mersenne, pseudo-Mersenne or generalized Mersenne numbers.
@@ -288,7 +295,8 @@ will also pass with overwhelming probability.
 Therefore, these computations will only be performed once
 on the final curve in general.
 %>>>
-% Friabilité%<<<
+\paragraph{Expected smoothness of random numbers.}%<<<
+
 Many common number-theoretic computations depend on
 the factorization of a parameter (for example, the order of some group),
 and become easier when this parameter is smooth
@@ -428,7 +436,7 @@ for example, it has probability~$1/256$ of being~$p^{1/4}$-smooth.
 
 We recall from paragraph~\ref{sss:twist} above
 that the smoothness of this number has a direct influence
-on the efficacity of some side-channel attacks.
+on the efficacy of some side-channel attacks.
 
 Since the curve and its quadratic twist
 share the same endomorphism ring,
@@ -448,7 +456,8 @@ with small coefficients evaluated at a small value.
 
 It is hard to check whether a given (prime) number is special.
 However, most prime numbers used in standard elliptic curves
-(for example in the FIPS 186--2 curves \XXX or in Curve25519)
+(for example in the FIPS 186--2 curves~\cite{nist2000fips186-2}
+or in Curve25519~\cite{pkc2006bernstein})
 are explictly given as special primes as these allow faster arithmetic
 over the base field.
 Even though we don't know any attack against curves with such special
@@ -516,9 +525,10 @@ one point~$(x,y)$ of~$E$ by only its abscissa~$x$ and
 one bit discriminating between the two possible values~$±y$.
 However, recovering~$y$ requires computing a square root in~$k$.
 This is easier when~$p ≡ 3 \pmod{4}$ since
-in this case, $c^{(p+1)/4}$~is a square root of~$c$ if $c$~is a square.
+in this case, $c^{(p+1)/2}$~is a square root of~$c$ if $c$~is a square.
 
 \subsubsection{Equations other than Weierstraß}
+\label{sss:other-eq}
 
 There exist several other representations of elliptic curves
 than Weierstrass curves, such as
@@ -530,9 +540,7 @@ Only a finite proportion of curves are isomorphic
 to a curve in these families.
 For example, about~$35\%$ of all elliptic curves
 are isomorphic to a twisted Edwards curve,
-and about~$40\%$ are isomorphic to a Montgomery curve.
-% source: own research
-\XXX source (own research!)
+and about~$40\%$ are isomorphic to a Montgomery curve~\cite{sac2011plut}.
 
 Each of these families requires at least
 the presence of a point of order two on the curve.
@@ -562,7 +570,9 @@ with particular properties which may be useful in some specific contexts.
 These families are small enough
 to contradict the ``normality'' conditions of section~\ref{ss:normal}.
 
-\subsubsection{Curves for pairing-based cryptography}
+\subsubsection{Pairing-friendly curves}
+
+\XXX
 
 \subsubsection{Curves with a fast endomorphism}
 
@@ -570,9 +580,24 @@ to contradict the ``normality'' conditions of section~\ref{ss:normal}.
 \section{Transparent generation of curves}
 \label{s:certif}
 
+The selection of an elliptic curve for cryptographic purposes
+involves checking a long list of properties,
+including several for which arbitrary bounds have to be set:
+such as the threshold at which we consider the class number
+to be exceptionally small,
+or the order of the twisted curve to be exceptionnally smooth.
+This implies that the generated curve
+will always depend from arbitrary choices,
+including the choice of the sampling function for elliptic curves.
+
 We give here the outlines of a certificate format
 proving that a given curve was generated by a public algorithm
 from a known seed.
+This allows any program receiving elliptic curve parameters
+for cryptographic purposes
+to check that the curve is indeed suitable,
+and moreover, that it is the first suitable curve
+found by the sampling function.
 
 \subsection{Generating an elliptic curve}
 
@@ -589,14 +614,14 @@ to validate the generating process.
 The certificate enables this second program
 to have a significantly shorter runtime than the first one.
 
-The list of conditions to be checked and the way to iterate
-curves parameters would be indicated in the certificate header.
+The list of conditions to be checked and the way to sample
+curve parameters would be indicated in the certificate header.
 We do not fully specify how every condition presented
 in the previous sections should be written down in the
-certificate when it lead to the rejection of a curve.
+certificate when it leads to the rejection of a curve.
 For most of the ones presented in Section~\ref{s:criteria},
 checking whether a curve is suitable is very fast
-and producing dat.
+and producing \XXX.
 However, two conditions in particular are more expensive:
 namely, the condition that the curve order is prime
 (this condition is expected to be the one condition
@@ -607,7 +632,13 @@ and the computation of the class number
 
 \subsection{Certifying the curve order}
 
-\XXX composite souvent, prime une fois
+The most restrictive condition in practice is that
+the curve order must be prime, or a prime number
+times a very small cofactor.
+This means that we expect that a linear number (in $\log p$)
+of curves will be rejected because of a composite group order,
+whereas the first curve found with a prime group order
+will be retained.
 
 \subsubsection{Composite curve order}
 
@@ -638,7 +669,7 @@ has a small impact on computation time.
 \smallskip
 
 In the other, “late” case, the curve order is not divisible
-by any one of the auxiliary primes.
+by any of the auxiliary primes.
 The counting algorithm will then compute the exact value~$N$.
 A simple pseudo-random proof of composition,
 such as the Miller-Rabin test,
@@ -646,14 +677,14 @@ will then suffice to prove that $N$~is composite.
 This case is less frequent than the “early” case;
 it happens with probability
 asymptotically equivalent to~$\frac{C}{\log \log p}$,
-and in a few percent of cases for cryptographic sizes.
+and in a few percents of cases for cryptographic sizes.
 % calcul douteux -> 0.56/log log p, soit 11% pour 2^256.
 
 \smallskip
 
 In both cases, it is possible to produce a certificate of composition
 of the curve order in the following form: $(N, G, Π)$,
-where $N$~is a number such that~$N < 2 (√p - 1)^2$,
+where $N$~is a composite number,%a number such that~$N < 2 (√p - 1)^2$,
 $Π$~is a proof of composition of~$N$,
 and $G$~is a point of the curve such that~$N G = 0$.
 Namely, in the “early” case, since we know a point~$G$ such that~$ℓ G = 0$,
@@ -664,6 +695,14 @@ If $N ≡ 0 \pmod{ℓ}$, then the certificate of composition
 is verifiable using~$O(\log ℓ) = O(\log \log p)$ operations in the base field;
 else, $O(\log p)$~operations are needed.
 
+We point out that if $G ≠ 0$ and~$N G = 0$, where
+$N < 2 (√p-1)^2$~is composite,
+then the curve order~$n$ is necessarily composite.
+Namely, let~$d = \gcd(n, N)$. Since~$G ≠ 0$, we have~$d ≠ 1$.
+If~$d = n$ then $n$~is a divisor of~$N$;
+since $N/2$~exceeds the lower Hasse bound~$(√p-1)^2$,
+we see that~$n = N$, and therefore $n$~is composite.
+If on the other hand~$d ≠ n$, then $d$~is a strict divisor of~$n$.
 
 \subsubsection{Prime curve order}
 We expect that all non-prime curve orders
@@ -679,7 +718,7 @@ and $Π$~is a proof of primality of~$N$
 (which may be left empty if $p$~is small enough
 that proving its primality directly is easier than using a certificate).
 The validation program then checks that $G ≠ 0$,
-$N · G = 0$, and~$N > (√p+1)^2 / 2$.
+$N · G = 0$, and~$N ≥ (√p+1)^2$.
 If this is the case, then $N$~is the curve order.
 
 For the sizes involved in elliptic curve cryptography,
@@ -719,7 +758,7 @@ and is therefore exponential.
 We do not expect to ever have to prove that a curve was rejected
 because its class number is less than~$B$.
 We know no efficient way to prove such a fact in general.
-However, in this case, it might be enough to prove
+However, it might be enough to prove
 that a few deterministically generated elements of the class group
 all have order~$≤ B$:
 while this does not prove that~$h ≤ B$,
@@ -745,21 +784,24 @@ the class number is not smooth.
 % The first case is extremely unlikely to ever happen since
 % most elliptic curves have a large class group.
 
-\subsection{Choice of the generating function}
+\subsection{Choice of the sampling function}
 
 The previous algorithms provide, to the best of our knowledge,
 a certifiable way to transparently generate a cryptographic elliptic curve
-from the input of a seed and a generating function.
+from the input of some conditions and a sampling function.
 In the case where the generating function is considered as pseudo-random
 and the normality conditions of section~\ref{ss:normal} are included,
 we feel confident that the resulting elliptic curve
 will not have any particular weakness.
 However, a malicious generating program, given enough computing resources,
 might be able to run the generating algorithm
-for a large family of seeds of the pseudo-random function
+for a large family of seeds of a pseudo-random function
 until a suitable elliptic curve is found.
 
-A supplementary condition against this manipulation
+Even though we think that a curve satisfying the normality conditions
+of section~\ref{ss:normal} will generally be as good as possible
+for cryptographic use,
+a supplementary precaution against this manipulation
 would be to put the seed choice out of reach of the generating entity.
 Several examples come to mind.
 For example, several entities could contribute to the seed,
@@ -767,7 +809,7 @@ each one of them generating its own secret share
 and publicly committing it before all shares are revealed.
 Another possibility is committing in advance to using
 the result of some future observation expected to be out of reach,
-such as the observation of sunspots
+such as the observation of sunspots, a physical lottery result,
 or a number derived from stock market or sports results.
 
 \bibliographystyle{plain}
