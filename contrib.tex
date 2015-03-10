@@ -97,7 +97,8 @@ For a given curve~$E$, checking if this is the case
 requires computing the group order~$N$,
 which is a moderately expensive task.
 For curves over large prime field, the most efficient algorithms are variations
-of the SEA algorithm~\cite{smf2008cl} with complexity~$O(\log(q)^4)$.
+of the SEA algorithm~\cite{mathcomp1985schoof,
+jtnb1995schoof,smf2008cl} with complexity~$O(\log(q)^4)$.
 
 The probability that a random elliptic curve over~$\F_p$
 has a prime group order is bounded below~\cite{lms2000gm}
@@ -556,7 +557,7 @@ and the computation of the class number
 Over a prime base field,
 the most efficient methods to compute the curve order are
 variants of the $ℓ$-adic SEA algorithm~\cite{mathcomp1985schoof,
-jtnb1995schoof}.
+jtnb1995schoof,smf2008cl}.
 This algorithm computes the order~$N$ of the curve
 by computing $N \pmod{ℓ}$ for several
 auxiliary primes~$ℓ < O(\log p)$.
