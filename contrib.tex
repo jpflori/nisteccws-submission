@@ -89,10 +89,14 @@ it is necessary that~$√q$ attains the required security bound.
 In practice, it is advisable to select elliptic curves whose order~$N$
 is the product of a large prime~$q$
 and a very small \emph{cofactor}~$N/q$.
+A cofactor $1$ yields an optimal security for a given bitsize
+whereas a very small cofactor might allow performance improvements.
 
 For a given curve~$E$, checking if this is the case
 requires computing the group order~$N$,
 which is a moderately expensive task.
+For curves over large prime field, the most efficient algorithms are variations
+of the SEA algorithm~\cite{smf2008cl} with complexity~$O(\log(q)^4)$.
 
 The probability that a random elliptic curve over~$\F_p$
 has a prime group order is bounded below~\cite{lms2000gm}
@@ -151,13 +155,19 @@ in place of the original curve~$E$,
 either through side-channel attacks~\cite{fdtc2008flrv},
 or through attacks on a badly designed protocol.
 
+Such attacks may be easily mitigated by checking
+that the manipulated points are on the original curve~$E$
+and not on its twist~$E'$.
 A supplementary layer of protection against these attacks
-is the fact that the twist~$E'$ satisfy
-the same security conditions as the curve~$E$ itself, then
-none of these attacks apply to the curve~$E$.
-
-\XXX ne protège pas contre toutes les attaques de changement de courbe
-\XXX les deux n'auront pas les mêmes comportements side-channel ($b^2$)
+can be obtained if the twist~$E'$ satisfy
+similar security conditions as the curve~$E$ itself.
+Nevertheless, it should be noted that the original curve and
+its twist will never share the same exact behavior against
+side-channel attacks, e.g. for one of the two curves the coefficient $b$
+will be a square which is unoptimal against side channel attacks.
+Moreover twist security won't protect against potential side channel attacks
+where one would detect if the computation took place on the curve or its twist
+and gain information on some bits of the secret.
 
 Using a variant of the technique of Galbraith and McKee~\cite{lms2000gm},
 we find that the probability that a random elliptic curve on~$\F_p$
@@ -207,12 +217,20 @@ known attacks on elliptic curves.
 Rather, they are properties that random curves should verify
 with overwhelming probability.
 When generating curves, checking for these conditions
-should reject a negligible proportion of curves;
-this means that we expect that any computations needed here
-will be done only once, for the final elliptic curve.
+should reject a negligible proportion of curves.
 If on the other hand a curve does not satisfy one of these conditions
 then, even though we do not know any precise attack,
 this curve is slightly more likely to be vulnerable.
+
+More concretely this means that during the process of generating
+a secure curve, in general curves will only be discarded
+because they don't very the efficiently checked criteria
+of the previous sections.
+When a curve passes the latter, the computations needed
+for the criteria of this section will be performed and
+will also pass with overwhelming probability.
+Therefore, these computations will only be performed once
+on the final curve in general.
 
 Many common number-theoretic computations depend on
 the factorization of a parameter (for example, the order of some group),
@@ -280,7 +298,7 @@ For cryptographic values of~$D$, this is a possible but
 quite expensive task.
 However, since almost all curves satisfy the condition~$D_K > √D$,
 this condition is extremely unlikely to lead to the rejection of a curve
-and the computation will therefore be performed only once.
+and the computation will therefore be performed only once in practice.
 Moreover, once the factorization of~$D$ is known,
 it is very easy to check again.
 
@@ -347,21 +365,29 @@ in time~$O(B \log p)$, which is polynomial.
 \subsubsection{Special base field}
 \label{sss:special-anormal}
 
-\XXX cardinal spécial = CM ?
-
 In the case of the \emph{multiplicative} discrete logarithm problem,
 the Special Number Field Sieve allows faster computations
 of discrete logarithms modulo~$p$
 when $p$~is a \emph{special} prime number,
-\emph{i.e.} when it is a value of a polynomial with small coefficients.
+\emph{i.e.} when it is a value of a polynomial of low degree
+with small coefficients evaluated at a small value.
 
-
-It is hard to check whether a given prime number is special.
+It is hard to check whether a given (prime) number is special.
 However, most prime numbers used in standard elliptic curves
 (for example in the FIPS 186--2 curves \XXX or in Curve25519)
-are explictly given as special primes.
-Even though we don't know any attack against curves with special parameters,
-it is possible that some might exist.
+are explictly given as special primes as these allow faster arithmetic
+over the base field.
+Even though we don't know any attack against curves with such special
+parameters, it is legitimate to consider them as special.
+
+A related question would be to detect curves whose number of points $N$
+is a special number.
+As noted above, this cannot be easily check.
+Nonetheless, the only way we are aware of which could lead to the construction
+of such a curve would be through the use of complex multiplication.
+Therefore, the discriminant of the number field associated
+to the generated curve would be unusually small and this would be detected by
+other checks from this section.
 
 \subsubsection{Embedding degree}
 
@@ -395,7 +421,7 @@ by an asymptotically non-zero proportion of all elliptic curves.
 
 \subsubsection{Fast Jacobian coordinates}
 
-Choosing a curve of the form~$y^2 = x^3 - 3 x + b$
+Choosing a curve of the form~$y^2 = x^3 - 3 x + b$ (that is with $a=-3$)
 enables to save 2 out of 10 multiplications~\cite{ieeep1363}
 required to double a point in Jacobian coordinates.
 A random elliptic curve over~$\F_p$
@@ -489,16 +515,21 @@ to validate the generating process.
 The certificate enables this second program
 to have a significantly shorter runtime than the first one.
 
-We do not fully specify all the conditions included in the certificate.
-For most of the conditions presented in Section~\ref{s:criteria},
-checking whether a curve is suitable is very fast.
+The list of conditions to be checked and the way to iterate
+curves parameters would be indicated in the certificate header.
+We do not fully specify how every condition presented
+in the previous sections should be written down in the
+certificate when it lead to the rejection of a curve.
+For most of the ones presented in Section~\ref{s:criteria},
+checking whether a curve is suitable is very fast
+and producing dat.
 However, two conditions in particular are more expensive:
-namely, the condition that the curve order be prime
+namely, the condition that the curve order is prime
 (this condition is expected to be the one condition
 leading to rejection of all the unsuitable curves,
 so that this check will be performed a large number of times),
 and the computation of the class number
-(which will be performed only once, for the final curve).
+(which will typically be performed only once, for the final curve).
 
 \subsection{Certifying the curve order}
 
@@ -612,8 +643,8 @@ computing the $B$ multiples~$g, 2g, …, B g$,
 and is therefore exponential.
 
 We do not expect to ever have to prove that a curve was rejected
-because its class number is at most~$B$.
-We know no efficient way to prove this.
+because its class number is less than~$B$.
+We know no efficient way to prove such a fact in general.
 However, in this case, it might be enough to prove
 that a few deterministically generated elements of the class group
 all have order~$≤ B$:
@@ -625,7 +656,7 @@ and that the curve should therefore be rejected.
 
 The same considerations apply to the smoothness of the class number.
 If the class number is not smooth, then
-veryfing it is a quadratic computation.
+verifying it is a quadratic computation.
 If the class number is smooth, then
 the generating program cannot prove it,
 but it can prove that it was unable to prove that
