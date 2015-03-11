@@ -47,6 +47,7 @@ without weakening too much its security.
 
 \bigbreak
 
+%<<<2
 We point out that several of these conditions are in contradiction
 with each other.
 
@@ -80,9 +81,19 @@ curves with a prime twist are themselves exceptional in some way.
 
 Because of all these contradictory conditions,
 we think that several curves and curve families should be used,
-so that each user might select the appropriate curve
+so that each implementation might select the appropriate curve
 depending on the context,
 such as performance constraints or the likelihood of side-channel attacks.
+
+\paragraph{Prime fields.}%<<<2
+We limit our discussion to elliptic curves defined over a prime field.
+In the case of extension fields,
+some attacks exist in particular cases~\cite{jc2013jv,asia1999dgm}.
+Moreover, the multiplicative discrete logarithm
+in extension fields is known to be
+quasi-polynomial in small characteristic~\cite{euro2014bgjt}.
+For all these reasons, we consider elliptic curves over prime fields
+as probably much safer than elliptic curves over extension fields.
 
 
 \subsection*{Notations}
@@ -96,7 +107,6 @@ $t = p + 1 - N$~is the trace of the Frobenius automorphism of~$E$,
 and $q$~is the largest prime divisor of~$N$.
 
 %>>>2
-
 \subsection{Hardness of the discrete logarithm problem}
 \label{ss:dlp}
 
@@ -157,6 +167,7 @@ to that in the additive group of~$\F_p$.
 Therefore, elliptic curves with trace~$1$ must be excluded.
 
 \subsubsection{Absence of multiplicative transfer}
+\label{sss:embedding-degree}
 
 The \emph{embedding degree} is the smallest integer~$e$ such that
 $q$~divides~$p^e -1$.
@@ -377,13 +388,13 @@ we know~\cite{jis2014cdkd} that the square-free part of
 a random integer~$n$ is less than~$√n$
 with probability approximately~$1.66/√n$.
 For cryptographic sizes, this means that,
-with overwhelming probability, we should expect~$D_K > √D_φ$.
+with overwhelming probability, we should expect~$D_K > √{D_φ}$.
 
 The best method we know to compute~$D_K$ requires the
 factorization of~$D_φ$.
 For cryptographic values of~$D_φ$, this is a possible but
 quite expensive task.
-However, since almost all curves satisfy the condition~$D_K > √D_φ$,
+However, since almost all curves satisfy the condition~$D_K > √{D_φ}$,
 this condition is extremely unlikely to lead to the rejection of a curve
 and the computation will therefore be performed only once for the final curve
 in practice.
@@ -391,6 +402,7 @@ Moreover, once the factorization of~$D_φ$ is known,
 it is very easy to check again.
 
 \subsubsection{Class number and class group}
+\label{sss:class-group}
 
 The class number~$h(K)$ of the maximal order~$\ro O_K$
 is the minimal degree of a number field
@@ -443,7 +455,7 @@ in time~$O(B \log p)$, which is polynomial.
 \subsubsection{Cardinality of the quadratic twist}
 \label{sss:normal-twist}
 
-The order of the quadratic twist of~$E$ is~$2(p+1) - n$.
+The order of the quadratic twist of~$E$ is~$2(p+1) - N$.
 This number lies in the same interval~$[p+1-2√p, p+1+2√p]$
 as the curve order itself,
 and therefore also as a probability about~$u^{-u}$
@@ -492,7 +504,7 @@ other checks from this section.
 
 For any bound~$m$, the probability that
 the embedding degree of~$E$ is at most~$m$
-is~\cite{jcrypto1998bk} $O(m^2 · p^{-1}·(\log p)^5·(\log\log p)^2)$.
+is~\cite{jc1998bk} $O(m^2 · p^{-1}·(\log p)^5·(\log\log p)^2)$.
 This implies that, with probability~$1 - 1/√p$,
 the embedding degree of~$E$ is at least~$p^{1/4 - o(1)}$.
 
@@ -561,22 +573,30 @@ and about~$40\%$ are isomorphic to a Montgomery curve~\cite{sac2011plut}.
 Each of these families requires at least
 the presence of a point of order two on the curve.
 This is a special point in the sense of~\ref{sss:special-points} above
-and could introduce a weakness in some contexts.
+and could introduce a weakness in some implementations.
+The corresponding automorphisms also speed up the Pollard rho
+method for discrete logarithms by a small factor~\cite{moc2000glv}.
 Moreover, in the case of a non-prime base field,
-there exist some attacks~\cite{jcrypto2014fghr}
+there exist some attacks~\cite{jc2014fghr}
 against several of these curve families
 which somewhat weaken the discrete logarithm problem.
-
-\XXX pollard rho accéléré ?
 
 \subsubsection{Fast base field arithmetic}
 \label{sss:special-fast}
 
-\XXX nombres premiers spéciaux
+The choice of a base field of a special form,
+such as the field of integers modulo
+a pseudo-Mersenne~\cite{pkc2006bernstein}
+or generalized Mersenne prime~\cite{nist2000fips186-2},
+allows the implementation of a faster, dedicated arithmetic.
 
-\subsubsection{Small coefficients}
+\subsubsection{Special coefficients}
 
-\XXX
+Most of the formulas for elliptic curve arithmetic
+involve the use of the curve coefficients.
+Choosing special values for these coefficients,
+such as integers with a small absolute value,
+allows a faster implementation.
 
 \subsection{Families of curves with particular properties}
 \label{ss:particular}
@@ -586,12 +606,41 @@ with particular properties which may be useful in some specific contexts.
 These families are small enough
 to contradict the ``normality'' conditions of section~\ref{ss:normal}.
 
-\subsubsection{Pairing-friendly curves}
-
-\XXX
-
 \subsubsection{Curves with a fast endomorphism}
 
+Some families of curves have an easily computable endomorphism.
+This allows a faster implementation of point multiplication%
+~\cite{crypto2001glv}, with a theoretical gain of up to 50\%.
+
+However, the construction of these families
+is done via the theory of complex multiplication~\cite{asia2013smith}.
+This requires a small class group,
+in contradiction with paragraph~\ref{sss:class-group}.
+
+Moreover, in the presence of an endomorphism of order~$m$,
+the Pollard rho method for computing discrete logarithms
+becomes faster by a factor of up to~$√m$~\cite{asia1999dgm,moc2000glv}.
+
+\subsubsection{Pairing-friendly curves}
+\label{sss:pairing}
+
+Some families of elliptic curves allow a fast pairing computation.
+This construction has various applications in cryptography,
+such as one-round three-way key exchange~\cite{jc2004joux},
+short signatures~\cite{jc2004bls},
+and identity-based cryptography~\cite{crypto2001bf,el2002paterson}.
+
+The main requirement for the existence of a fast pairing
+is that the embedding degree is small.
+This is in direct contradiction with
+the requirement from paragraph~\ref{sss:embedding-degree} above.
+
+Moreover, most of the constructions
+for pairing-friendly curves~\cite{jc2010fst}
+either use very sparse families of curves,
+or use complex multiplication to construct adequate curves,
+which requires a small class group,
+in contradiction with paragraph~\ref{sss:class-group}.
 
 \section{Transparent generation of curves}
 \label{s:certif}
@@ -611,7 +660,8 @@ proving that a given curve was generated by a public algorithm
 from a known seed.
 This allows any program receiving elliptic curve parameters
 for cryptographic purposes
-to check that the curve is indeed suitable,
+to check, at a moderate computational cost,
+that the curve is indeed suitable,
 and moreover, that it is the first suitable curve
 found by the sampling function.
 
@@ -636,8 +686,8 @@ We do not fully specify how every condition presented
 in the previous sections should be written down in the
 certificate when it leads to the rejection of a curve.
 For most of the ones presented in Section~\ref{s:criteria},
-checking whether a curve is suitable is very fast
-and producing \XXX.
+checking whether a curve is suitable is very fast.
+% XXX ?
 However, two conditions in particular are more expensive:
 namely, the condition that the curve order is prime
 (this condition is expected to be the one condition
@@ -711,14 +761,14 @@ If $N ≡ 0 \pmod{ℓ}$, then the certificate of composition
 is verifiable using~$O(\log ℓ) = O(\log \log p)$ operations in the base field;
 else, $O(\log p)$~operations are needed.
 
-We point out that if $G ≠ 0$ and~$N G = 0$, where
+We point out that if $G ≠ 0$ and~$n G = 0$, where
 $N < 2 (√p-1)^2$~is composite,
-then the curve order~$n$ is necessarily composite.
+then the curve order~$N$ is necessarily composite.
 Namely, let~$d = \gcd(n, N)$. Since~$G ≠ 0$, we have~$d ≠ 1$.
-If~$d = n$ then $n$~is a divisor of~$N$;
-since $N/2$~exceeds the lower Hasse bound~$(√p-1)^2$,
-we see that~$n = N$, and therefore $n$~is composite.
-If on the other hand~$d ≠ n$, then $d$~is a strict divisor of~$n$.
+If~$d = N$ then $N$~is a divisor of~$n$;
+since $n/2$~exceeds the lower Hasse bound~$(√p-1)^2$,
+we see that~$N = n$, and therefore $N$~is composite.
+If on the other hand~$d ≠ N$, then $d$~is a strict divisor of~$N$.
 
 \subsubsection{Prime curve order}
 We expect that all non-prime curve orders
@@ -761,18 +811,17 @@ However, this bound is only approximately~$p^{1/4}/\log p$.
 
 \smallskip
 
-\XXX est-ce vraiment nécessaire ?
-
 In some cases, a better (higher) lower bound~$B$ might be required.
-Proving that the class number is greater than~$B$ is simple:
-since the class group is expected to be almost cyclic,
+We can prove that the class number is greater than~$B$
+in the following simple way:
+since the class group is expected to be almost cyclic~\cite{nt1984cl},
 it is enough to produce an element~$g$ of order~$≥ B$.
 However, checking this requires
 computing the $B$ multiples~$g, 2g, …, B g$,
 and is therefore exponential.
 
 We do not expect to ever have to prove that a curve was rejected
-because its class number is less than~$B$.
+because its class number is smaller than~$B$.
 We know no efficient way to prove such a fact in general.
 However, it might be enough to prove
 that a few deterministically generated elements of the class group
@@ -825,7 +874,8 @@ each one of them generating its own secret share
 and publicly committing it before all shares are revealed.
 Another possibility is committing in advance to using
 the result of some future observation expected to be out of reach,
-such as the observation of sunspots, a physical lottery result,
+such as the observation of sunspots,
+a physical random number such as the result of a lottery drawing,
 or a number derived from stock market or sports results.
 
 \bibliographystyle{plain}
