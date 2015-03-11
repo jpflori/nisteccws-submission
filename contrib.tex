@@ -44,6 +44,13 @@
 
 Generating and normalizing elliptic curves to use them in a cryptographic
 context is a hard task.
+There have been several attempts to define standard elliptic curve
+for a general cryptographic use,
+such as NIST FIPS 186--2 curves~\cite{nist2000fips186-2},
+Brainpool curves~\cite{rfc5639},
+SECG curves~\cite{certicom2010sec2},
+ANSSI FRP256v1~\cite{jorf2011ce},
+and Chinese state cryptography administration SM2~\cite{oscca2010sm2}.
 Recent years have seen some distrust cast on previously normalized
 curves~\cite{rfc5639,nist2000fips186-2,jorf2011ce}
 and the emergence of the need to normalize new curves.
@@ -89,11 +96,13 @@ with each other.
 
 \paragraph{Choice of the cardinality of the base field
 and the curve coefficients.}
-These may either be chosen pseudo-randomly,
+These may either be chosen pseudo-randomly~%
+\cite{rfc5639,jorf2011ce}, for example
 as a precaution against some side-channel attacks~(\ref{sss:special-side})
 or against some possible future attacks~(\ref{sss:special-anormal});
 or very small values may be chosen instead,
-in the view of faster curve arithmetic~(\ref{sss:special-fast}).
+in the view of faster curve arithmetic~(\ref{sss:special-fast})~%
+\cite{nist2000fips186-2,pkc2006bernstein,oscca2010sm2}.
 
 \paragraph{Cofactor.}
 While the existence of a very small torsion subgroup
@@ -524,8 +533,9 @@ with small coefficients evaluated at a small value.
 
 It is hard to check whether a given (prime) number is special.
 However, most prime numbers used in standard elliptic curves
-(for example in the FIPS 186--2 curves~\cite{nist2000fips186-2}
-or in Curve25519~\cite{pkc2006bernstein})
+(for example in the FIPS 186--2 curves~\cite{nist2000fips186-2},
+in Curve25519~\cite{pkc2006bernstein},
+and in the SM2 curve~\cite{oscca2010sm2})
 are explictly given as special primes as these allow faster arithmetic
 over the base field.
 Even though we don't know any attack against curves with such special
