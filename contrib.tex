@@ -948,7 +948,43 @@ such as the observation of sunspots,
 a physical random number such as the result of a lottery drawing,
 or a number derived from stock market or sports results.
 
+
+\section{Public families of elliptic curves}
+
+Some of the publicly announced elliptic curves,
+are provably sampled, in a way conforming to the presentation
+sketched out in section~\ref{s:certif}.
+This is the case of the Brainpool family,
+where the sampling function generates
+curves defined over pseudo-random prime fields,
+with pseudo-random coefficients;
+however, the generating process does not include
+the condition that the order of the quadratic twist must be
+prime~(\ref{sss:twist}).
+This is also te case of some curves with small coefficients,
+such as Curve25519,
+where the sampling function generates the coefficients
+in increasing order.
+Since these curves are, by construction,
+defined over special prime fields
+and since they also have small coefficients,
+they are special in the sense of section~\ref{ss:normal}.
+Moreover, most of these curves
+also have a cofactor strictly greater than one.
+
+We therefore point out that, to our knowledge,
+there does not exist yet any public proposal of an elliptic curve,
+or of a family of elliptic curves, conforming both
+to the provable generation of section~\ref{s:certif}
+and to the maximal security criteria of section~\ref{s:criteria}
+and in particular of~\ref{ss:dlp}, \ref{ss:side} and~\ref{ss:normal},
+\emph{i.e.} with pseudo-random coefficients
+modulo a pseudo-random prime,
+with a secure twist,
+and with a cofactor equal to one.
+
 \bibliographystyle{plain}
 \bibliography{contrib}
 %\end{multicols}
+
 \end{document}
