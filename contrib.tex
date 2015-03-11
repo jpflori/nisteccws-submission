@@ -48,11 +48,9 @@ Secrétariat général de la défense et de la sécurité nationale\newline%
 \date{\today}
 
 \begin{document}
-%\begin{multicols}{2}
-\sloppy
-
-\maketitle
-
+\sloppy \maketitle
+% Introduction <<<1
+%<<<2
 Generating and normalizing elliptic curves to use them in a cryptographic
 context is a hard task.
 There have been several attempts to define standard elliptic curve
@@ -77,27 +75,34 @@ trusted~\cite{safecurves,msr2014bcln,eprint2014brainpool,eprint2013abgr},
 together with a proposal of such a correctly generated
 curve~\cite{pkc2006bernstein,msr2014bcln,eprint2013abgr}.
 
-First thing first, it seems very important to us to not restrict
-to one specific kind of elliptic curves.
-Stanardizing only one family of curves seems dangerous to us.
-Even though no attack may be currently known, the sole argument of simplicity
-is not sufficient to put all our eggs in the same basket.
-We recall that security is the primary matter,
-while speed is another important one,
-but both cannot be optimally achieved in the current state-of-the-art:
-compromises have to be made.
+\medskip
+%<<<2
+We believe it very important not to restrict implementation
+to a single elliptic curve or to a very small family of elliptic curves.
+Even though no attack might currently be known,
+the existence of an attack against this particular family
+is always a possibility.
+% Stanardizing only one family of curves seems dangerous to us.
+% Even though no attack may be currently known, the sole argument of simplicity
+% is not sufficient to put all our eggs in the same basket.
+The two main priorities are security and speed.
+Given the current state-of-the-art,
+some compromises between them have to be made.
 For example, most of the recently proposed
 curves~\cite{pkc2006bernstein,msr2014bcln,eprint2013abgr,oscca2010sm2}
-rely on the use of special primes and particular forms of curves to achieve optimal speed,
+rely on the use of special primes and particular forms of curves to
+achieve a very high speed,
 but don't achieve optimal bit-security.
-Having a less speed-optimized but more general looking curve
+Having at least a less speed-optimized but more general-looking curve,
 defined over a prime field whose characteristic looks random,
 in general Weierstraß form, and with a prime number of points
 seems primordial,
 especially if the former class of curves gets broken in the future.
 For ECC to be trusted and widely adopted, \emph{diversity} is needed.
 
-Second, even if a curve verifies all common security criteria,
+\medskip
+%<<<2
+Secondly, even when a curve verifies all common security criteria,
 whether it is completely generic, or with a few speed-optimized parameters,
 it does not give confidence enough to trust the curve.
 One should know how the curve was generated and be able to verify that the
@@ -111,7 +116,7 @@ Therefore, \emph{rigidity} as sometimes advertized~\cite{safecurves} seems illus
 to us.
 Nevertheless, \emph{transparency} is achievable and needed for wide adoption of ECC.
 
-In this note, we only deal with both the issues aforementioned:\\
+In this note, we only deal with both the aforementioned issues:\\
 {\bf Diversity. }
 What criteria should a secure elliptic curve verify, what flexibility is available and what kind of diversity is to be wished?\\
 {\bf Transparency. }
@@ -175,9 +180,11 @@ If this order is itself a prime number,
 then this grants a supplementary layer of protection
 against some side-channel attacks (\ref{sss:twist}).
 However, this property is relatively rare itself
-(by a linear factor in~$\log p$),
+(by a factor proportional to~$\log p$),
 which could raise concern that
 curves with a prime twist are themselves exceptional in some way.
+
+\medskip
 
 Because of all these contradictory conditions,
 we think that several curves and curve families should be used,
@@ -190,7 +197,7 @@ We limit our discussion to elliptic curves defined over a prime field.
 In the case of extension fields,
 some attacks exist in particular
 cases~\cite{jc2013jv,rsa2004mtw,asia1999dgm,jc2002ghs}.
-Some of these attack may even be exploited
+Some of these attacks may even be exploited
 to include a trapdoor in an elliptic curve~\cite{jc2006teske}.
 We also note that, over finite fields with small characteristic,
 an index calculus technique related to that of~\cite{jc2013jv}
@@ -250,7 +257,8 @@ whereas a very small cofactor might allow performance improvements.
 For a given curve~$E$, checking if this is the case
 requires computing the group order~$N$,
 which is a moderately expensive task.
-For curves over large prime field, the most efficient algorithms are variations
+For curves over large prime fields,
+the most efficient algorithms are variations
 of the SEA algorithm~\cite{mathcomp1985schoof,
 jtnb1995schoof,smf2008cl} with complexity~$O(\log(q)^4)$.
 
@@ -334,8 +342,9 @@ and gain information on some bits of the secret.
 Using a variant of the technique of Galbraith and McKee~\cite{lms2000gm},
 we find that the probability that a random elliptic curve on~$\F_p$
 is both secure and twist-secure
-is bounded below by $\frac{0.2}{\log^2 p}$.
-This probability means that
+seems bounded below by $\frac{0.5}{\log^2 p}$
+and above by~$\frac{5}{\log^2 p}$.
+This estimate means that
 including twist-security in the conditions is particularly expensive,
 since all necessary checks will be performed on
 a quadratic (in $\log p$) number of elliptic curves.
@@ -436,7 +445,8 @@ any algorithm involving polynomials or matrices of this size
 would be easy to implement.
 We instead use the smoothness bound~$B = p^{1/4}$,
 corresponding to a probability of~$1/256$.
-This means that we expect that $1/256$~of pseudo-random elliptic curves
+This means that we expect that only
+$1/256$~of pseudo-random elliptic curves
 will be rejected as ``too exceptional'',
 while computations in these groups
 are likely to involve linear or polynomial algebra
@@ -474,13 +484,15 @@ The discriminant of~$φ$ is the value~$D_φ = t^2 - 4 p < 0$.
 It is the discriminant of the order $\ro O_φ = ℤ[φ] \subset K$.
 The discriminant of~$K$ is the (fundamental) discriminant~$D_K$ of its
 maximal order $\ro O_K$.
-It is the square-free part of $D_φ$: $D_φ = D_K f_φ^2$ for~$f_φ ∈ ℤ$
-called the conductor of the order $\ro O_φ$.
+It is closely related to the square-free part of $D_φ$:
+$D_φ = D_K f_φ^2$ for~$f_φ ∈ ℤ$
+called the conductor of the order $\ro O_φ$,
+and $D_K$ or~$D_K/4$ is a square-free integer.
 The \emph{endomorphism ring} of the curve~$E$ is some order $\ro O_E$ in $K$:
 $\ro O_φ \subset \ro O_E \subset \ro O_K$.
 Let us denote its discriminant by $D_E$.
 Note that if $E$ has prime order, then $\ro O_E = \ro O_K$.
-More generally, if a prime $l$ divides the conductor $f_E$ of $\ro O_E$,
+More generally, if a prime $ℓ$ divides the conductor $f_E$ of $\ro O_E$,
 then it must divide the cardinality $N$ of $E$.
 Therefore, if the cofactor $c$ in $N$ is very small, a necessary condition for
 cryptographic use, then $\ro O_E$ should be close to $\ro O_K$ but
@@ -503,8 +515,8 @@ For cryptographic values of~$D_φ$, this is a possible but
 quite expensive task.
 However, since almost all curves satisfy the condition~$D_K > √{D_φ}$,
 this condition is extremely unlikely to lead to the rejection of a curve
-and the computation will therefore be performed only once for the final curve
-in practice.
+and the computation will therefore in practice be performed
+only once for the final curve.
 Moreover, once the factorization of~$D_φ$ is known,
 it is very easy to check again.
 
@@ -550,9 +562,10 @@ The class number has a negligible probability
 of being~$(\log p)^{1-o(1)}$-smooth.
 While the best known algorithms for computing the class number
 are sub-exponential~\cite{ams1989hmc,chile2009biasse},
-for a polynomial bound~$B$,
+for any bound~$B$,
 it is possible to prove that $h$~is not $B$-smooth
-in time~$O(B \log p)$, which is polynomial.
+in time~$O(B \log p)$,
+which is polynomial if $B$~is polynomial.
 % it is possible to prove in polynomial time that $h$~is not $B$-smooth in polynomial time.
 % Namely, for each prime~$ℓ < B$, let~$e(ℓ)$ be
 % the smallest integer such that~$ℓ^{e(ℓ)} > h$;
@@ -787,8 +800,10 @@ found by the sampling function.
 \subsection{Generating an elliptic curve}
 
 This procedure is in two steps.
-First, a \emph{generating program} determines a suitable elliptic curve.
-This programs outputs the elliptic curve
+First, a \emph{generating program}
+checks elliptic curves, as provided by a \emph{sampling function},
+until a suitable elliptic curve is found.
+This programs outputs the elliptic curve parameters
 together with a \emph{certificate} proving that
 the curve is actually suitable for cryptographic purposes.
 Moreover, the certificate should also prove that
@@ -810,7 +825,7 @@ checking whether a curve is suitable is very fast.
 However, two conditions in particular are more expensive:
 namely, the condition that the curve order is prime
 (this condition is expected to be the one condition
-leading to rejection of all the unsuitable curves,
+leading to rejection of most of the unsuitable curves,
 so that this check will be performed a large number of times),
 and the computation of the class number
 (which will typically be performed only once, for the final curve).
@@ -836,7 +851,7 @@ by computing $N \pmod{ℓ}$ for several
 auxiliary primes~$ℓ < O(\log p)$.
 The fact that $N$~is composite may therefore be detected
 either in an early step,
-when there exists~$ℓ$ (not part of an allowed cofactor $c$)
+when there exists~$ℓ$ (not dividing an allowed cofactor $c$)
 such that $N ≡ 0 \pmod{ℓ}$,
 or at the end of the computation,
 when we find that the computed value~$N/c$ is composite.
@@ -864,7 +879,7 @@ will then suffice to prove that $N/c$~is composite.
 This case is less frequent than the “early” case;
 it happens with probability
 asymptotically equivalent to~$\frac{C}{\log \log p}$,
-and in a few percents of cases for cryptographic sizes.
+and in a few percent of cases for cryptographic sizes.
 % calcul douteux -> 0.56/log log p, soit 11% pour 2^256.
 
 \smallskip
@@ -882,23 +897,34 @@ If $N ≡ 0 \pmod{ℓ}$, then the certificate of composition
 is verifiable using~$O(\log ℓ) = O(\log \log p)$ operations in the base field;
 else, $O(\log p)$~operations are needed.
 
-We point out that if $G ≠ 0$ and~$n G = 0$, where
-$n < 2 (√p-1)^2$~is composite and coprime with $c$,
-then the number~$N/c$ is necessarily composite.
-Namely, let~$d = \gcd(n, N)$. Since~$G ≠ 0$, we have~$d ≠ 1$.
-If~$d = N$ then $N$~is a divisor of~$n$;
+Let~$c$ be the maximal allowed cofactor.
+We point out that if $G ≠ 0$ and~$n · G = 0$, where
+$n < 2(√p-1)^2$~is a composite number coprime to~$c$,
+then the curve order~$N$ has a composite factor coprime to~$c$.
+Namely, let~$d = \gcd (n, N)$; $d$~is coprime to~$c$.
+Since~$G≠0$, we have~$d≠1$.
+If~$d = N$ then $N$~divides~$n$ and is coprime to~$c$.
 since $n/2$~exceeds the lower Hasse bound~$(√p-1)^2$,
 we see that~$N = n$, and therefore $N$~is composite.
 If on the other hand~$d ≠ N$, then $d$~is a strict divisor of~$N$.
 
+% We point out that if $G ≠ 0$ and~$n G = 0$, where
+% $n < 2 (√p-1)^2$~is composite and coprime with $c$,
+% then the number~$N/c$ is necessarily composite.
+% Namely, let~$d = \gcd(n, N)$. Since~$G ≠ 0$, we have~$d ≠ 1$.
+% If~$d = N$ then $N$~is a divisor of~$n$;
+% since $n/2$~exceeds the lower Hasse bound~$(√p-1)^2$,
+% we see that~$N = n$, and therefore $N$~is composite.
+% If on the other hand~$d ≠ N$, then $d$~is a strict divisor of~$N$.
+
 \subsubsection{(Almost) prime curve order}
 
 When the algorithm finds that the value~$N$ is prime
-or only includes the expected small cofactor $c$,
-a certificate is as follows: $(N, G, Π)$,
-where $N$~is the number of points,
-$G$~is a point of order~$N$ (for example, any random non-zero point if $N$
-is prime),
+or only includes the allowed small cofactor $c$,
+a certificate is as follows: $(c, N/c, G, Π)$,
+where $N$~is the number of points, $c$~is the computed cofactor,
+$G$~is a point of order~$N$
+(for example, any random non-zero point if $N$ is prime),
 and $Π$~is a proof of primality of~$N/c$
 (which may be left empty if $N$~is small enough
 that proving its primality directly is easier than using a certificate).
@@ -919,6 +945,24 @@ We expect that all curve orders including more than the expected cofactor $c$
 will be rejected by a pseudoprimality test such as the Miller-Rabin test.
 Therefore, the generating program will have to run the primality proof
 only once, for the last curve.
+
+\subsubsection{Refreshing the base field}
+
+We saw in paragraph~\ref{sss:twist} that the rarity of
+secure and twist-secure elliptic curves depends on the
+cardinality of the base field,
+with a variation of a factor~$≈ 10$ for a given size of prime numbers.
+This means that,
+in the case where a pseudo-random base field is preferred,
+the sampling function for elliptic curves should change the base field
+for each new curve, to avoid being stuck at a ``bad'' prime.
+This averages out the probabilities
+and leads to a speed-up of~$≈ 10$ compared to the worst-case expectation.
+This has no apparent security implication
+since the final prime number is pseudo-random anyway;
+the only performance penalty is the cost of generating new primes,
+which is negligible to the cost of computing curve orders.
+
 
 \subsection{(Fundamental) discriminant and class group}
 
@@ -1007,9 +1051,8 @@ such as the observation of sunspots,
 a physical random number such as the result of a lottery drawing,
 or a number derived from stock market or sports results.
 
-\subsection{Certificate format}
+\subsection{A concrete example}
 
-\subsection{Toy example}
 
 \section{Public families of elliptic curves}
 
