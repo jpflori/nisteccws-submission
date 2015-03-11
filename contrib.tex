@@ -90,7 +90,7 @@ rely on the use of special primes and particular forms of curves to achieve opti
 but don't achieve optimal bit-security.
 Having a less speed-optimized but more general looking curve
 defined over a prime field whose characteristic looks random,
-in general Weierstrass form, and with a prime number of points
+in general Weierstraß form, and with a prime number of points
 seems primordial,
 especially if the former class of curves gets broken in the future.
 For ECC to be trusted and widely adopted, \emph{diversity} is needed.
@@ -107,18 +107,19 @@ but as will become clear in the next sections, some arbitrary choices always hav
 to be made: one has to fix some bounds, optimize speed rather than security, and so on.
 Therefore, \emph{rigidity} as sometimes advertized~\cite{safecurves} seems illusory
 to us.
-Nevertheless, \emph{transparency} is achievable.
+Nevertheless, \emph{transparency} is achievable and needed for wide adoption of ECC.
 
-In this note, we only deal with both the issues aforementioned:
-\begin{itemize}
-\item what criteria should a secure elliptic curve verify, what flexibility is available and what kind of diversity is to be wished?
-\item how to generate a curve in a transparent way so that it can be trusted and
+In this note, we only deal with both the issues aforementioned:\\
+{\bf Diversity. }
+What criteria should a secure elliptic curve verify, what flexibility is available and what kind of diversity is to be wished?\\
+{\bf Transparency. }
+How to generate a curve in a transparent way so that it can be trusted and
 not suspected to fall in a (not publicly known to be) vulnerable class?
-\end{itemize}
+
 No proposal of curve is made, though a proposal for a certificate format
 easing the verification of the generation of a curve is made.
 
-\section{Criteria for cryptographic elliptic curves}
+\section{Citeria for cryptographic elliptic curves}
 \label{s:criteria}
 
 %<<<2
@@ -188,7 +189,7 @@ In the case of extension fields,
 some attacks exist in particular
 cases~\cite{jc2013jv,rsa2004mtw,asia1999dgm,jc2002ghs}.
 Some of these attack may even be exploited
-do include a trapdoor in an elliptic curve~\cite{jc2006teske}.
+to include a trapdoor in an elliptic curve~\cite{jc2006teske}.
 We also note that, over finite fields with small characteristic,
 an index calculus technique related to that of~\cite{jc2013jv}
 gives a quasi-polynomial solution to
@@ -205,7 +206,7 @@ $k = \F_{p}$ is the finite field with $p$~elements,
 $E: y^2 = x^3 + a\,x + b$~is an elliptic curve defined over~$k$,
 $N = \abs{E(\F_p)}$~is the order of the group of rational points of~$E$,
 $t = p + 1 - N$~is the trace of the Frobenius automorphism of~$E$,
-and $q$~is the largest prime divisor of~$N$.
+and $q$~is the largest prime divisor of~$N$ and $c = N/q$ the cofactor.
 
 %>>>2
 \subsection{Hardness of the discrete logarithm problem}
@@ -240,8 +241,8 @@ with complexity~$O(√q)$, where $q$~is the largest prime divisor of~$N$,
 it is necessary that~$√q$ attains the required security bound.
 In practice, it is advisable to select elliptic curves whose order~$N$
 is the product of a large prime~$q$
-and a very small \emph{cofactor}~$N/q$.
-A cofactor $1$ yields an optimal security for a given bitsize
+and a very small \emph{cofactor}~$c = N/q$.
+A cofactor $c = 1$ yields an optimal security for a given bitsize
 whereas a very small cofactor might allow performance improvements.
 
 For a given curve~$E$, checking if this is the case
@@ -479,16 +480,23 @@ Let us denote its discriminant by $D_E$.
 Note that if $E$ has prime order, then $\ro O_E = \ro O_K$.
 More generally, if a prime $l$ divides the conductor $f_E$ of $\ro O_E$,
 then it must divide the cardinality $N$ of $E$.
+Therefore, if the cofactor $c$ in $N$ is very small, a necessary condition for
+cryptographic use, then $\ro O_E$ should be close to $\ro O_K$ but
+in exceptional cases, and we focus on the case where $\ro O_E = \ro O_K$
+which is sufficient for prime-order elliptic curves.
+This treatment can be extended provided the order $\ro O_E$ is computed.
+The best method we know to compute~$\ro O_E$ for an ordinary elliptic curve
+is of subexponential complexity~\cite{jmc2012bisson}.
 
 The expected value for~$D_E$ is~$D_K ≈ D_E ≈ D_φ$;
 we know~\cite{jis2014cdkd} that the square-free part of
 a random integer~$n$ is less than~$√n$
 with probability approximately~$1.66/√n$.
 For cryptographic sizes, this means that,
-with overwhelming probability, we should expect~$D_K > √{D_φ}$.
+with overwhelming probability, we should expect~$D_K \geq D_E > √{D_φ}$.
 
 The best method we know to compute~$D_K$ requires the
-factorization of~$D_φ$.
+factorization of~$D_φ$ and is therefore of subexponential complexity.
 For cryptographic values of~$D_φ$, this is a possible but
 quite expensive task.
 However, since almost all curves satisfy the condition~$D_K > √{D_φ}$,
@@ -499,13 +507,13 @@ Moreover, once the factorization of~$D_φ$ is known,
 it is very easy to check again.
 
 In particular, this approach eliminates
-the two smallest discriminants~$D = -4$ and~$D = -3$,
+the two smallest discriminants~$D_K = -4$ and~$D_K = -3$,
 corresponding to the special curves with $j$-invariant~$1728$ or~$0$.
 
 \subsubsection{Class number and class group}
 \label{sss:class-group}
 
-The class number~$h(K)$ of the maximal order~$\ro O_K$
+The class number~$h(\ro O_E)$ of the order~$\ro O_E$
 is the minimal degree of a number field
 over which $E$~admits a faithful lift.
 It is also the degree of the Hilbert class polynomial
@@ -517,9 +525,14 @@ the best method we know to compute the class number
 is subexponential~\cite{ams1989hmc,chile2009biasse},
 and requires at least a few days of computation for cryptographic sizes.
 Since this method also computes the group stucture
-of the ideal class group of~$\ro O_K$,
+of the ideal class group of~$\ro O_E$,
 it can be used to produce a small and easily verifiable certificate
 for the class number.
+Note that the value $h(\ro O_E)$ is easily computed~\cite[7.24]{cox1989primes}
+as a multiple of the more classical class number~$h(K)$
+of the maximal order~$\ro O_K$ in $K$
+which is therefore enough to work with.
+
 % It is related to the class number~$h(\ro O_K)$ of the maximal order
 % by a simple formula~\cite[7.24]{cox1989primes}:
 % if $R$~is the order of conductor~$f$, then
@@ -661,7 +674,7 @@ in this case, $c^{(p+1)/2}$~is a square root of~$c$ if $c$~is a square.
 \label{sss:other-eq}
 
 There exist several other representations of elliptic curves
-than Weierstrass curves, such as
+than Weierstraß curves, such as
 Edwards curves~\cite{ams2007edwards},
 twisted Edwards curves~\cite{africa2008bbjl},
 Jacobi curves~\cite{aaaaec2003bj},
@@ -712,7 +725,7 @@ to contradict the ``normality'' conditions of section~\ref{ss:normal}.
 
 Some families of curves have an easily computable endomorphism.
 This allows a faster implementation of point multiplication%
-~\cite{crypto2001glv}, with a theoretical gain of up to 50\%.
+~\cite{crypto2001glv,joc2011gls}, with a theoretical gain of up to 50\%.
 
 However, the construction of these families
 is done via the theory of complex multiplication~\cite{asia2013smith}.
@@ -756,6 +769,8 @@ or the order of the twisted curve to be exceptionnally smooth.
 This implies that the generated curve
 will always depend from arbitrary choices,
 including the choice of the sampling function for elliptic curves.
+That is why we think \emph{rigidity} as often advertized~\cite{safecurves}
+is illusory, and we prefer the term of \emph{transparency}.
 
 We give here the outlines of a certificate format
 proving that a given curve was generated by a public algorithm
@@ -819,9 +834,10 @@ by computing $N \pmod{ℓ}$ for several
 auxiliary primes~$ℓ < O(\log p)$.
 The fact that $N$~is composite may therefore be detected
 either in an early step,
-when there exists~$ℓ$ such that $N ≡ 0 \pmod{ℓ}$,
+when there exists~$ℓ$ (not part of an allowed cofactor $c$)
+such that $N ≡ 0 \pmod{ℓ}$,
 or at the end of the computation,
-when we find that the computed value~$N$ is composite.
+when we find that the computed value~$N/c$ is composite.
 
 In the “early” case,
 the counting algorithm finds a polynomial~$f$, of degree~$(ℓ-1)/2$,
@@ -837,11 +853,12 @@ has a small impact on computation time.
 \smallskip
 
 In the other, “late” case, the curve order is not divisible
-by any of the auxiliary primes.
+by any of the auxiliary primes (but the ones expected if
+a small cofactor was allowed).
 The counting algorithm will then compute the exact value~$N$.
 A simple pseudo-random proof of composition,
 such as the Miller-Rabin test,
-will then suffice to prove that $N$~is composite.
+will then suffice to prove that $N/c$~is composite.
 This case is less frequent than the “early” case;
 it happens with probability
 asymptotically equivalent to~$\frac{C}{\log \log p}$,
@@ -851,10 +868,10 @@ and in a few percents of cases for cryptographic sizes.
 \smallskip
 
 In both cases, it is possible to produce a certificate of composition
-of the curve order in the following form: $(N, G, Π)$,
-where $N$~is a composite number,%a number such that~$N < 2 (√p - 1)^2$,
-$Π$~is a proof of composition of~$N$,
-and $G$~is a point of the curve such that~$N G = 0$.
+of the curve order in the following form: $(N/c, G, Π)$,
+where $N/c$~is a composite number,%a number such that~$N < 2 (√p - 1)^2$,
+$Π$~is a proof of composition of~$N/c$,
+and $G$~is a point of the curve such that~$(N/c) G = 0$.
 Namely, in the “early” case, since we know a point~$G$ such that~$ℓ G = 0$,
 we may output the certificate~$(2 ℓ, G, Π)$
 where $Π$~is a certificate of composition of~$2 ℓ$.
@@ -864,26 +881,24 @@ is verifiable using~$O(\log ℓ) = O(\log \log p)$ operations in the base field;
 else, $O(\log p)$~operations are needed.
 
 We point out that if $G ≠ 0$ and~$n G = 0$, where
-$N < 2 (√p-1)^2$~is composite,
-then the curve order~$N$ is necessarily composite.
+$n < 2 (√p-1)^2$~is composite and coprime with $c$,
+then the number~$N/c$ is necessarily composite.
 Namely, let~$d = \gcd(n, N)$. Since~$G ≠ 0$, we have~$d ≠ 1$.
 If~$d = N$ then $N$~is a divisor of~$n$;
 since $n/2$~exceeds the lower Hasse bound~$(√p-1)^2$,
 we see that~$N = n$, and therefore $N$~is composite.
 If on the other hand~$d ≠ N$, then $d$~is a strict divisor of~$N$.
 
-\subsubsection{Prime curve order}
-We expect that all non-prime curve orders
-will be rejected by a pseudoprimality test such as the Miller-Rabin test.
-Therefore, the generating program will have to run the primality proof
-only once, for the last curve.
+\subsubsection{(Almost) prime curve order}
 
-When the algorithm finds that the value~$N$ is prime,
+When the algorithm finds that the value~$N$ is prime
+or only includes the expected small cofactor $c$,
 a certificate is as follows: $(N, G, Π)$,
 where $N$~is the number of points,
-$G$~is a point of order~$N$ (for example, any random non-zero point),
-and $Π$~is a proof of primality of~$N$
-(which may be left empty if $p$~is small enough
+$G$~is a point of order~$N$ (for example, any random non-zero point if $N$
+is prime),
+and $Π$~is a proof of primality of~$N/c$
+(which may be left empty if $N$~is small enough
 that proving its primality directly is easier than using a certificate).
 The validation program then checks that $G ≠ 0$,
 $N · G = 0$, and~$N ≥ (√p+1)^2$.
@@ -898,17 +913,27 @@ in a form such as ECPP~\cite{mathcomp1993am},
 which has a reasonable size~($O(\log^2 p)$ bits)
 and is verifiable in a short time~($O(\log^2 p)$ field operations).
 
-\subsection{Fundamental discriminant and class group}
+We expect that all curve orders including more than the expected cofactor $c$
+will be rejected by a pseudoprimality test such as the Miller-Rabin test.
+Therefore, the generating program will have to run the primality proof
+only once, for the last curve.
+
+\subsection{(Fundamental) discriminant and class group}
 
 The fundamental discriminant is given by
-the factorization of the discriminant~$D = t^2 - 4 p$.
+the factorization of the discriminant~$D_K = t^2 - 4 p$.
 While computing this factorization is quite expensive,
 (and asymptotically dominates the whole generation process),
 it will generally be performed only once, on the final curve,
 and validating the factorization is extremely easy.
+The same is true for the computation of the exact endomorphism
+ring $\ro O_E$ in case the curve has not prime order (recall that
+in this case $\ro O_E = \ro O_K$ and no additional computation has
+to be performed).
 
 The knowledge of the fundamental discriminant gives a lower bound
-on the class number of the endomorphism field of~$E$.
+on the class number of the endomorphism field of~$E$
+and so on its endomorphism ring~$\ro O_E$.
 However, this bound is only approximately~$p^{1/4}/\log p$.
 
 \smallskip
