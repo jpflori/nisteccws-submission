@@ -12,6 +12,7 @@
 \usepackage{unicode}
 \usepackage{indentfirst}
 \usepackage{hyperref}
+%\usepackage{bookmark}
 \usepackage{fancyhdr}
 
 \def\F{\mathbb{F}}
@@ -30,34 +31,50 @@
 }
 \pagestyle{empty}
 
+\hypersetup{pdftitle={Flexibility and transparency for ECC},%
+  pdfauthor={Jean-Pierre Flori and Jérôme Plût and Jean-René Reinhard},%
+  pdfsubject={Elliptic Curve Cryptography},%
+  pdfcreator={Jean-Pierre Flori and Jérôme Plût and Jean-René Reinhard},%
+  pdfproducer={Jean-Pierre Flori and Jérôme Plût and Jean-René Reinhard},%
+  pdfkeywords={mathematics} {cryptography} {elliptic curves} {discrete logarithm problem},
+}
+
+\title{Flexibility and transparency for ECC}
+\author{Jean-Pierre Flori\thanks{Agence nationale de la sécurité des systèmes d'information\newline%
+Secrétariat général de la défense et de la sécurité nationale\newline%
+51, boulevard de La Tour-Maubourg\newline%
+75700 Paris 07 SP}%
+\and Jérôme Plût\footnotemark[1] \and Jean-René Reinhard\footnotemark[1]}
+\date{\today}
+
 \begin{document}
 %\begin{multicols}{2}
 \sloppy
 
-\title{Flexibility and transparency for ECC}
-\author{Jean-Pierre Flori\thanks{{\noindent}Agence nationale de la sécurité des systèmes d'information\newline%
-51, boulevard de La Tour-Maubourg\newline%
-75700 Paris 07 SP}
-\and Jérôme Plût\footnotemark[1] \and Jean-René Reinhard\footnotemark[1]}
-\date{\today}
 \maketitle
 
 Generating and normalizing elliptic curves to use them in a cryptographic
 context is a hard task.
 Recent years have seen some distrust cast on previously normalized
-curves~\cite{rfc5639,nist2000fips186-2,jorf2011ce}
+curves~\cite{rfc5639,nist2000fips186-2,jorf2011ce,oscca2010sm2}
 and the emergence of the need to normalize new curves.
 Different parties have spoken their point of view on the (dis)trust they have
-on previously normalized curves whether it is because of the way
-they were generated or the properties they verify.
-Such analyses often come with a proposal on how to correctly generate a curve
-and a list of security or performance criteria should the curve
-verify~\cite{safecurves,msr2014bcln,eprint2014brainpool},
+on previously normalized curves whether it is because of
+the properties they verify
+or the process used to generate them.
+Such analyses often come with
+a list of security or performance criteria a curve should verify
+and a proposal on how to correctly generate such a curve so that it can be
+trusted~\cite{safecurves,msr2014bcln,eprint2014brainpool,eprint2013abgr},
 together with a proposal of such a correctly generated
-curve~\cite{pkc2006bernstein,msr2014bcln}.
+curve~\cite{pkc2006bernstein,msr2014bcln,eprint2013abgr}.
 
-
-\section*{Introduction}
+In this note, we only deal with the first part:
+\begin{itemize}
+\item what should a secure elliptic curve verify, what flexibility is available?
+\item how to generate a curve in a transparent way so that it can be trusted and
+not suspected to fall in a (not publicly known to be) vulnerable class?
+\end{itemize}
 
 \section{Criteria for cryptographic elliptic curves}
 \label{s:criteria}
