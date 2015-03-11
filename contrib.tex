@@ -23,6 +23,8 @@
 
 exemples Microsoft MSR ECLIB, Curve25519, ...
 
+\section*{Introduction}
+
 \section{Criteria for cryptographic elliptic curves}
 \label{s:criteria}
 
@@ -88,10 +90,14 @@ such as performance constraints or the likelihood of side-channel attacks.
 \paragraph{Prime fields.}%<<<2
 We limit our discussion to elliptic curves defined over a prime field.
 In the case of extension fields,
-some attacks exist in particular cases~\cite{jc2013jv,asia1999dgm}.
-Moreover, the multiplicative discrete logarithm
-in extension fields is known to be
-quasi-polynomial in small characteristic~\cite{euro2014bgjt}.
+some attacks exist in particular
+cases~\cite{jc2013jv,rsa2004mtw,asia1999dgm,jc2002ghs}.
+Some of these attack may even be exploited
+do include a trapdoor in an elliptic curve~\cite{jc2006teske}.
+We also note that, over finite fields with small characteristic,
+an index calculus technique related to that of~\cite{jc2013jv}
+gives a quasi-polynomial solution to
+the multiplicative discrete logarithm problem~\cite{euro2014bgjt}.
 For all these reasons, we consider elliptic curves over prime fields
 as probably much safer than elliptic curves over extension fields.
 
@@ -123,10 +129,6 @@ That is, a “normal” curve in the sense of Section~\ref{ss:normal}
 will satisfy such criteria and will not be affected by yet-unknown
 attacks relying on these values being exceptionnally small.
 To conclude, the omission of these criteria here is not problematic.
-
-\XXX pollard rho petit discriminant
-
-\XXX trap Weil descent
 
 \subsubsection{Nonsingular curve}
 
@@ -401,6 +403,10 @@ in practice.
 Moreover, once the factorization of~$D_φ$ is known,
 it is very easy to check again.
 
+In particular, this approach eliminates
+the two smallest discriminants~$D = -4$ and~$D = -3$,
+corresponding to the special curves with $j$-invariant~$1728$ or~$0$.
+
 \subsubsection{Class number and class group}
 \label{sss:class-group}
 
@@ -602,7 +608,7 @@ allows a faster implementation.
 \label{ss:particular}
 
 We give here a short list of families of curves
-with particular properties which may be useful in some specific contexts.
+with particular properties which might be useful in some specific contexts.
 These families are small enough
 to contradict the ``normality'' conditions of section~\ref{ss:normal}.
 
@@ -636,7 +642,7 @@ This is in direct contradiction with
 the requirement from paragraph~\ref{sss:embedding-degree} above.
 
 Moreover, most of the constructions
-for pairing-friendly curves~\cite{jc2010fst}
+for pairing-friendly curves~\cite{jc2010fst,space2014em}
 either use very sparse families of curves,
 or use complex multiplication to construct adequate curves,
 which requires a small class group,
