@@ -1,4 +1,4 @@
-\documentclass[twocolumn,letterpaper]{article}
+\documentclass[twocolumn,letterpaper,10pt]{article}
 \usepackage[margin=26mm]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -79,13 +79,15 @@ curve~\cite{pkc2006bernstein,msr2014bcln,eprint2013abgr}.
 
 First thing first, it seems very important to us to not restrict
 to one specific kind of elliptic curves.
-Only standardizing curve in a given family seems dangerous to us.
+Stanardizing only one family of curves seems dangerous to us.
 Even though no attack may be currently known, the sole argument of simplicity
 is not sufficient to put all our eggs in the same basket.
-Recall that security is the primary matter, speed is another important one,
-but both cannot be optimaly achieved in the current state-of-the-art:
+We recall that security is the primary matter,
+while speed is another important one,
+but both cannot be optimally achieved in the current state-of-the-art:
 compromises have to be made.
-For example, most of the recently proposed curves~\cite{pkc2006bernstein,msr2014bcln,eprint2013abgr}
+For example, most of the recently proposed
+curves~\cite{pkc2006bernstein,msr2014bcln,eprint2013abgr,oscca2010sm2}
 rely on the use of special primes and particular forms of curves to achieve optimal speed,
 but don't achieve optimal bit-security.
 Having a less speed-optimized but more general looking curve
@@ -119,7 +121,7 @@ not suspected to fall in a (not publicly known to be) vulnerable class?
 No proposal of curve is made, though a proposal for a certificate format
 easing the verification of the generation of a curve is made.
 
-\section{Citeria for cryptographic elliptic curves}
+\section{Criteria for cryptographic elliptic curves}
 \label{s:criteria}
 
 %<<<2
