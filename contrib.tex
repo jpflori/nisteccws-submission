@@ -31,15 +31,16 @@
 }
 \pagestyle{empty}
 
-\hypersetup{pdftitle={Flexibility and transparency for ECC},%
+\hypersetup{pdftitle={Diversity and transparency for ECC},%
   pdfauthor={Jean-Pierre Flori and Jérôme Plût and Jean-René Reinhard},%
   pdfsubject={Elliptic Curve Cryptography},%
   pdfcreator={Jean-Pierre Flori and Jérôme Plût and Jean-René Reinhard},%
   pdfproducer={Jean-Pierre Flori and Jérôme Plût and Jean-René Reinhard},%
-  pdfkeywords={mathematics} {cryptography} {elliptic curves} {discrete logarithm problem},
+  pdfkeywords={mathematics} {cryptography} {elliptic curves} {discrete logarithm problem} {security}
+ {diversity} {transparency},
 }
 
-\title{Flexibility and transparency for ECC}
+\title{Diversity and transparency for ECC}
 \author{Jean-Pierre Flori\thanks{Agence nationale de la sécurité des systèmes d'information\newline%
 Secrétariat général de la défense et de la sécurité nationale\newline%
 51, boulevard de La Tour-Maubourg\newline%
@@ -67,24 +68,56 @@ curves~\cite{rfc5639,nist2000fips186-2,jorf2011ce,oscca2010sm2}
 and the emergence of the need to normalize new curves.
 Different parties have spoken their point of view on the (dis)trust they have
 on previously normalized curves whether it is because of
-the properties they verify
+the properties they verify or don't verify
 or the process used to generate them.
 Such analyses often come with
-a list of security or performance criteria a curve should verify
-and a proposal on how to correctly generate such a curve so that it can be
+a list of security and performance/implementation-related criteria
+a curve should verify
+and a proposal on how to correctly generate such a curve in a way that can be
 trusted~\cite{safecurves,msr2014bcln,eprint2014brainpool,eprint2013abgr},
 together with a proposal of such a correctly generated
 curve~\cite{pkc2006bernstein,msr2014bcln,eprint2013abgr}.
 
-\XXX il faut une famille qui maximise la sécurité,
-donc entièrement pseudo-aléa et sans cofacteur.
+First thing first, it seems very important to us to not restrict
+to one specific kind of elliptic curves.
+Only standardizing curve in a given family seems dangerous to us.
+Even though no attack may be currently known, the sole argument of simplicity
+is not sufficient to put all our eggs in the same basket.
+Recall that security is the primary matter, speed is another important one,
+but both cannot be optimaly achieved in the current state-of-the-art:
+compromises have to be made.
+For example, most of the recently proposed curves~\cite{pkc2006bernstein,msr2014bcln,eprint2013abgr}
+rely on the use of special primes and particular forms of curves to achieve optimal speed,
+but don't achieve optimal bit-security.
+Having a less speed-optimized but more general looking curve
+defined over a prime field whose characteristic looks random,
+in general Weierstrass form, and with a prime number of points
+seems primordial,
+especially if the former class of curves gets broken in the future.
+For ECC to be trusted and widely adopted, \emph{diversity} is needed.
 
-In this note, we only deal with the first part:
+Second, even if a curve verifies all common security criteria,
+whether it is completely generic, or with a few speed-optimized parameters,
+it does not give confidence enough to trust the curve.
+One should know how the curve was generated and be able to verify that the
+generation process actually ended up with the claimed curve:
+why was this specific curve chosen and not another one in the same family
+which verifies the same criteria?
+Much has been said on this matter~\cite{safecurves,msr2014bcln,eprint2014brainpool,eprint2013abgr},
+but as will become clear in the next sections, some arbitrary choices always have
+to be made: one has to fix some bounds, optimize speed rather than security, and so on.
+Therefore, \emph{rigidity} as sometimes advertized~\cite{safecurves} seems illusory
+to us.
+Nevertheless, \emph{transparency} is achievable.
+
+In this note, we only deal with both the issues aforementioned:
 \begin{itemize}
-\item what should a secure elliptic curve verify, what flexibility is available?
+\item what criteria should a secure elliptic curve verify, what flexibility is available and what kind of diversity is to be wished?
 \item how to generate a curve in a transparent way so that it can be trusted and
 not suspected to fall in a (not publicly known to be) vulnerable class?
 \end{itemize}
+No proposal of curve is made, though a proposal for a certificate format
+easing the verification of the generation of a curve is made.
 
 \section{Criteria for cryptographic elliptic curves}
 \label{s:criteria}
@@ -252,7 +285,7 @@ They have an embedding degree~one and must be excluded.
 
 Index calculus used to compute discrete logarithms in multiplicative subgroups
 of finite fields has been extended to elliptic curves in a variety of ways.
-However, in the current state of art, it is more expensive
+However, in the current state-of-the-art, it is more expensive
 to correctly lift the curve and the points defining the DLP than
 to directly solve it~\cite{asia1998ss,dcc2000silverman,dcc2000ksst,ecc2007silverman,sac2008silverman},
 so that such algorithms are not to be considered yet.
