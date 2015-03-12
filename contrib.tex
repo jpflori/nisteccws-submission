@@ -57,7 +57,7 @@ Secrétariat général de la défense et de la sécurité nationale\newline%
 %<<<2
 Generating and normalizing elliptic curves to use them in a cryptographic
 context is a hard task.
-There have been several attempts to define standard elliptic curve
+There have been several attempts to define public elliptic curve
 for a general cryptographic use,
 such as NIST FIPS 186--2 curves~\cite{nist2000fips186-2},
 Brainpool curves~\cite{rfc5639},
@@ -101,6 +101,9 @@ and in particular the NIST standardized curves,
 rely on the use of special primes or particular forms of curves to
 achieve a very high speed,
 but don't attain optimal bit-security.
+Moreover, secure implementation of these particular curves
+may require some specific precautions against various attacks,
+such as side-channel attacks.
 Having at least a less speed-optimized but more general-looking curve,
 defined over a prime field whose characteristic looks random,
 in general Weierstraß form, and with a prime number of points
@@ -112,17 +115,24 @@ For ECC to be trusted and widely adopted, \emph{diversity} is needed.
 %<<<2
 Secondly, even when a curve verifies all common security criteria,
 whether it is completely generic, or with a few speed-optimized parameters,
-this does not give confidence enough to trust the curve.
-One should know how the curve was generated and be able to verify that the
-generation process actually ended up with the claimed curve:
-why was this specific curve chosen and not another one in the same family
-which verifies the same criteria?
+another criterion for inclusion in international standards is that
+one should know all the details about how the curve was generated,
+and be able to verify that the
+generation process actually ended up with the claimed curve
+and not anoher one in the same family verifying the same conditions.
 Much has been said on this matter~\cite{safecurves,msr2014bcln,eprint2014brainpool,eprint2013abgr},
 but as will become clear in the next sections, some arbitrary choices always have
-to be made: one has to fix some bounds, optimize speed rather than security, and so on.
+to be made: one has to fix some bounds,
+find suitable speed/security trade-offs, and so on.
 Therefore, \emph{rigidity} as sometimes advertized~\cite{safecurves} seems illusory
 to us.
 Nevertheless, \emph{transparency} is achievable and needed for wide adoption of ECC.
+
+
+\XXX reformuler ceci:
+pas de courbe;
+des critères, dont certains en contradiction, mais on a des préfs;
+un certificat validant ceci.
 
 In this note, we only deal with both the aforementioned issues:\\
 {\bf Security. }
@@ -169,7 +179,7 @@ These may either be chosen pseudo-randomly~%
 \cite{rfc5639,jorf2011ce}, for example
 as a precaution against some side-channel attacks~(\ref{sss:special-side})
 or against some possible future attacks~(\ref{sss:special-anormal});
-or very small values may be chosen instead,
+or very specific values may be chosen instead,
 in view of faster curve arithmetic~(\ref{sss:special-fast})~%
 \cite{nist2000fips186-2,pkc2006bernstein,oscca2010sm2}.
 
@@ -242,13 +252,15 @@ We point out that some criteria commonly required
 for generating elliptic curves,
 such as the criteria on the discriminant and class number~\cite{rfc5639},
 are not known to lead to a direct attack.
-Therefore, we do not include them here.
-Nonetheless, a randomly chosen curve will satisfy the
-criteria usually edicted for these values with overwhelming probability.
-That is, a “normal” curve in the sense of Section~\ref{ss:normal}
-will satisfy such criteria and will not be affected by yet-unknown
-attacks relying on these values being exceptionnally small.
-To conclude, the omission of these criteria here is not problematic.
+Therefore, we do not include them here,
+but in Section~\ref{ss:normal} instead.
+% Nonetheless, a randomly chosen curve will satisfy the
+% criteria usually edicted for these values with overwhelming probability.
+% That is, a “normal” curve in the sense of Section~\ref{ss:normal}
+% will satisfy such criteria and will not be affected by yet-unknown
+% attacks relying on these values being exceptionnally small.
+% To conclude, the omission of these criteria here is not problematic.
+
 
 \subsubsection{Nonsingular curve}
 \label{sss:singular}
@@ -318,10 +330,11 @@ to correctly lift the curve and the points defining the DLP than
 to directly solve it~\cite{asia1998ss,dcc2000silverman,dcc2000ksst,ecc2007silverman,sac2008silverman},
 so that such algorithms are not to be considered yet.
 
-\subsection{Resistance depending upon implementation}
+\subsection{Implementation-dependent security}
 \label{ss:side}
 
-While the existence of side-channel attacks
+While the existence of some attacks,
+such as side-channel attacks or attacks against badly desined protocols,
 mainly depends upon the implementation of the curve,
 in some circumstances the choice of the curve itself
 might have an impact on the effiency of these attacks
@@ -329,7 +342,11 @@ or on the ease of implementation of appropriate counter-measures.
 We give here a list of criteria
 which make some implementations of the elliptic curve more resistant.
 
-\subsubsection{Special points}
+\subsubsection{Small subgroup}
+
+\XXX
+
+\subsubsection{Absence of special points}
 \label{sss:special-points}
 
 The \emph{special points} of an elliptic curve
@@ -406,6 +423,8 @@ While the use of such prime numbers speeds up the modular arithmetic,
 they are also more vulnerable to some side-channel attacks%
 ~\cite{ches2005dkj,ics2005ss,ches2014bpsy,eprint2014-434}.
 
+\XXX demander la référence à Emmanuel
+
 \subsubsection{Unified group law}
 \label{sss:unified}
 
@@ -415,6 +434,8 @@ such as~$P + P$, $P + (-P)$ or~$P + 0$ for Weierstraß curves.
 When using such formulas, a point multiplication
 is computed in constant time relatively to the scalar,
 which adds a layer of protection against side-channel attacks.
+
+However, these families all have a non-trivial cofactor.
 
 \subsection{Normality of the curve}
 \label{ss:normal}
@@ -620,7 +641,7 @@ they have the same discriminant.
 Therefore, all properties already satisfied
 by the discriminant of the curve are also satisfied by its twist.
 
-\subsubsection{Special base field}
+\subsubsection{Non-special base field}
 \label{sss:special-anormal}
 
 In the case of the \emph{multiplicative} discrete logarithm problem,
@@ -642,7 +663,7 @@ parameters, it is legitimate to consider them as exceptional.
 
 A related question would be to detect curves whose number of points $N$
 is a special number.
-As noted above, this cannot be easily check.
+As noted above, this cannot be easily checked.
 Nonetheless, the only way we are aware of which could lead to the construction
 of such a curve would be through the use of complex multiplication.
 Therefore, the discriminant of the number field associated
@@ -652,7 +673,7 @@ other checks from this section.
 \subsubsection{Embedding degree}
 
 For any bound~$m$, the probability that
-the embedding degree of~$E$ is at most~$m$
+the embedding degree (\ref{sss:embedding-degree}) of~$E$ is at most~$m$
 is~\cite{jc1998bk} $O(m^2 · p^{-1}·(\log p)^5·(\log\log p)^2)$.
 This implies that, with probability~$1 - 1/√p$,
 the embedding degree of~$E$ is at least~$p^{1/4 - o(1)}$.
@@ -675,7 +696,9 @@ $(p-1)$~has at least one prime divisor greater than~$(\log p)^2$.
 We list here a few criteria that
 may make the implementation of an elliptic curve more convenient
 without weakening the security.
-We note that some of these conditions are satisfied
+We note that some of these conditions
+(namely \ref{sss:a=-3}, \ref{sss:few-points},
+\ref{sss:easy-sqrt} and \ref{sss:other-eq}) are satisfied
 by an asymptotically non-zero proportion of all elliptic curves:
 in this case, we believe it very unlikely
 that any attack will be possible against such a wide class of curves.
@@ -691,6 +714,7 @@ is isomorphic to a curve with~$a = -3$
 with probability~$1/2$ if~$p ≡ 3 \pmod{4}$ and~$1/4$ if~$p ≡ 1 \pmod{4}$.
 
 \subsubsection{Number of points at most~\texorpdfstring{$p$}{p}}
+\label{sss:few-points}
 
 If the number of points~$N$ is greater than~$p$,
 then it might be impossible to represent numbers up to~$N-1$
@@ -698,6 +722,7 @@ in the same memory size as coordinates of points of~$E$.
 Exactly one half of all curves satisfy this.
 
 \subsubsection{Easy computation of square roots}
+\label{sss:easy-sqrt}
 
 The \emph{point compression} method allows representing
 one point~$(x,y)$ of~$E$ by only its abscissa~$x$ and
@@ -807,6 +832,8 @@ will always depend from arbitrary choices,
 including the choice of the sampling function for elliptic curves.
 That is why we think \emph{rigidity} as often advertized~\cite{safecurves}
 is illusory, and we prefer the notion of \emph{transparency}.
+
+\XXX choix du nombre premier et du point
 
 Checking that the generation process,
 with a known algorithm and a public seed,
@@ -1175,7 +1202,7 @@ class\_number = 9, form = $(17,3,89)$
 
 \endgroup%>>>
 
-\section{The status of current families of elliptic curves}
+\section*{Conclusion and suggestions}
 
 Some of the publicly announced elliptic curves,
 are provably sampled, in a way conforming to the presentation
@@ -1190,7 +1217,7 @@ prime~(\ref{sss:twist}).
 This is also the case of some curves with small coefficients,
 where the sampling function generates the coefficients
 in increasing order.
-Since these curves are, by construction,
+However, since these curves are, by construction,
 defined over special prime fields
 and since they also have small coefficients,
 they are exceptional in the sense of section~\ref{ss:normal}.
