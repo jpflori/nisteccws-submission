@@ -13,6 +13,8 @@
 \usepackage{indentfirst}
 \usepackage{hyperref}
 \usepackage{fancyhdr}
+\hypersetup{colorlinks,urlcolor=[rgb]{.1,.1,.6},
+  linkcolor=[rgb]{.5,.0,.2}, citecolor=[rgb]{.2,.0,.4}}
 
 \def\F{\mathbb{F}}
 \let\ro\mathcal
@@ -23,6 +25,7 @@
 \DeclareMathOperator\Cl{Cl}
 
 \def\XXX{{\colorbox{red}{{\color{white}\bfseries XXX}}}}
+\def\labelitemi{--}
 
 \fancypagestyle{plain}{%
   \renewcommand{\headrulewidth}{0pt}%
@@ -236,6 +239,7 @@ attacks relying on these values being exceptionnally small.
 To conclude, the omission of these criteria here is not problematic.
 
 \subsubsection{Nonsingular curve}
+\label{sss:singular}
 
 If the discriminant~$4\, a^3 + 27\,b^2$
 of the curve~$E$ is zero, then $E$~is not an elliptic curve:
@@ -244,6 +248,7 @@ an additive or multiplicative group.
 Such (non-elliptic) curves must be excluded.
 
 \subsubsection{Large prime subgroup}
+\label{sss:prime}
 
 Since discrete logarithms are computable in the group~$E(k)$
 with complexity~$O(√q)$, where $q$~is the largest prime divisor of~$N$,
@@ -268,6 +273,7 @@ by $\frac{0.44}{\log p}$.
 This condition is the most restrictive in practical use.
 
 \subsubsection{Absence of additive transfer}
+\label{sss:anomalous}
 
 If $N = p$ then there exists an \emph{additive transfer}
 reducing the discrete logarithm in~$E(k)$
@@ -661,6 +667,7 @@ we consider only these conditions which are satisfied
 by an asymptotically non-zero proportion of all elliptic curves.
 
 \subsubsection{Fast Jacobian coordinates}
+\label{sss:a=-3}
 
 Choosing a curve of the form~$y^2 = x^3 - 3 x + b$ (that is with $a=-3$)
 enables to save 2 out of 10 multiplications~\cite{ieeep1363}
@@ -842,7 +849,26 @@ will be retained.
 
 \subsubsection{Composite curve order}
 
-Over a prime base field,
+In general, proving that the curve order,
+is not prime, or has a too large cofactor, is easy:
+namely, if $n < 2 (√p-1)^2$ is a composite number coprime to~$c$
+and $P ≠ 0$~is a point such that~$n · P = 0$,
+then the curve order~$N$ has a composite factor coprime to~$c$.
+Namely, let~$d = \gcd (n, N)$; $d$~is coprime to~$c$.
+Since~$P≠0$, we have~$d≠1$.
+If~$d = N$ then $N$~divides~$n$ and is coprime to~$c$.
+since $n/2$~exceeds the lower Hasse bound~$(√p-1)^2$,
+we see that~$N = n$, and therefore $N$~is composite.
+If on the other hand~$d ≠ N$, then $d$~is a strict divisor of~$N$.
+
+The certificate is then the list~$(N/c, a, c · G)$,
+where $N$~is the computed curve order, $c$~is the cofactor,
+$a$~is a witness of composition of~$N/c$,
+and $G$~is a random point (such that~$c · G ≠ 0$).
+
+\smallskip
+
+However, in practice, over a prime base field,
 the most efficient methods to compute the curve order are
 variants of the $ℓ$-adic SEA algorithm~\cite{mathcomp1985schoof,
 jtnb1995schoof,smf2008cl}.
@@ -852,13 +878,13 @@ auxiliary primes~$ℓ < O(\log p)$.
 The fact that $N$~is composite may therefore be detected
 either in an early step,
 when there exists~$ℓ$ (not dividing an allowed cofactor $c$)
-such that $N ≡ 0 \pmod{ℓ}$,
-or at the end of the computation,
-when we find that the computed value~$N/c$ is composite.
+such that $N ≡ 0 \pmod{ℓ}$.
 
-In the “early” case,
+It is also possible to benefit from this early detection
+while still producing a proof of composition for the order of~$E$.
+Namely, if $N ≡ 0 \pmod{ℓ}$ then
 the counting algorithm finds a polynomial~$f$, of degree~$(ℓ-1)/2$,
-whose roots are the abscissae of $ℓ$-torsion points of~$E$.
+whose roots are the abscissae of points of order~$ℓ$ of~$E$.
 We may then recover one of these points by
 computing one factor of~$f$ of degree~$1$:
 using the Cantor-Zassenhaus polynomial factorization algorithm,
@@ -867,55 +893,47 @@ is approximately the same as that of computing~$N \pmod{ℓ}$,
 so that computing this extra information
 has a small impact on computation time.
 
-\smallskip
+The certificate in this case is the list $(ℓ, P)$,
+where $P$~is a point of order~$ℓ$\footnote{%
+It is also possible, although slightly less efficient,
+to conform to the preceding certificate format
+by using the list~$(2 ℓ, 2, P)$,
+since $a = 2$~is a witness of composition for~$2ℓ$.}.
 
-In the other, “late” case, the curve order is not divisible
-by any of the auxiliary primes (but the ones expected if
-a small cofactor was allowed).
-The counting algorithm will then compute the exact value~$N$.
-A simple pseudo-random proof of composition,
-such as the Miller-Rabin test,
-will then suffice to prove that $N/c$~is composite.
-This case is less frequent than the “early” case;
-it happens with probability
-asymptotically equivalent to~$\frac{C}{\log \log p}$,
-and in a few percent of cases for cryptographic sizes.
-% calcul douteux -> 0.56/log log p, soit 11% pour 2^256.
-
-\smallskip
-
-In both cases, it is possible to produce a certificate of composition
-of the curve order in the following form: $(n, G, Π)$,
-where $n$~is a composite number coprime to the cofactor,
-$Π$~is a proof of composition of~$n$,
-and $G$~is a point of the curve such that~$n· G = 0$.
-Namely, in the “early” case, since we know a point~$G$ such that~$ℓ G = 0$,
-we may output the certificate~$(2 ℓ, G, Π)$
-where $Π$~is a certificate of composition of~$2 ℓ$.
-In all cases, the full certificate has size~$O(\log p)$.
-If $N ≡ 0 \pmod{ℓ}$, then the certificate of composition
-is verifiable using~$O(\log ℓ) = O(\log \log p)$ operations in the base field;
-else, $O(\log p)$~operations are needed.
-
-Let~$c$ be the maximal allowed cofactor.
-We point out that if $G ≠ 0$ and~$n · G = 0$, where
-$n < 2(√p-1)^2$~is a composite number coprime to~$c$,
-then the curve order~$N$ has a composite factor coprime to~$c$.
-Namely, let~$d = \gcd (n, N)$; $d$~is coprime to~$c$.
-Since~$G≠0$, we have~$d≠1$.
-If~$d = N$ then $N$~divides~$n$ and is coprime to~$c$.
-since $n/2$~exceeds the lower Hasse bound~$(√p-1)^2$,
-we see that~$N = n$, and therefore $N$~is composite.
-If on the other hand~$d ≠ N$, then $d$~is a strict divisor of~$N$.
-
-% We point out that if $G ≠ 0$ and~$n G = 0$, where
-% $n < 2 (√p-1)^2$~is composite and coprime with $c$,
-% then the number~$N/c$ is necessarily composite.
-% Namely, let~$d = \gcd(n, N)$. Since~$G ≠ 0$, we have~$d ≠ 1$.
-% If~$d = N$ then $N$~is a divisor of~$n$;
-% since $n/2$~exceeds the lower Hasse bound~$(√p-1)^2$,
-% we see that~$N = n$, and therefore $N$~is composite.
-% If on the other hand~$d ≠ N$, then $d$~is a strict divisor of~$N$.
+We also note that, if the list of conditions
+include the primality of the twisted curve,
+then both methods above should be used
+simultaneously for the curve and its quadratic twist.
+% \smallskip
+% 
+% In the other, “late” case, the curve order is not divisible
+% by any of the auxiliary primes (but the ones expected if
+% a small cofactor was allowed).
+% The counting algorithm will then compute the exact value~$N$.
+% A simple pseudo-random proof of composition,
+% such as the Miller-Rabin test,
+% will then suffice to prove that $N/c$~is composite.
+% This case is less frequent than the “early” case;
+% it happens with probability
+% asymptotically equivalent to~$\frac{0.56}{\log \log p}$,
+% and in a few percent of cases for cryptographic sizes.
+% % expérimentalement, 0.56/log B où B = le plus grand ℓ
+% % calcul douteux -> 0.56/log log p, soit 11% pour 2^256.
+% 
+% \smallskip
+% 
+% In both cases, it is possible to produce a certificate of composition
+% of the curve order in the following form: $(n, G, Π)$,
+% where $n$~is a composite number coprime to the cofactor,
+% $Π$~is a proof of composition of~$n$,
+% and $G$~is a point of the curve such that~$n· G = 0$.
+% Namely, in the “early” case, since we know a point~$G$ such that~$ℓ G = 0$,
+% we may output the certificate~$(2 ℓ, G, Π)$
+% where $Π$~is a certificate of composition of~$2 ℓ$.
+% In all cases, the full certificate has size~$O(\log p)$.
+% If $N ≡ 0 \pmod{ℓ}$, then the certificate of composition
+% is verifiable using~$O(\log ℓ) = O(\log \log p)$ operations in the base field;
+% else, $O(\log p)$~operations are needed.
 
 \subsubsection{(Almost) prime curve order}
 
@@ -957,7 +975,7 @@ in the case where a pseudo-random base field is preferred,
 the sampling function for elliptic curves should change the base field
 for each new curve, to avoid being stuck at a ``bad'' prime.
 This averages out the probabilities
-and leads to a speed-up of~$≈ 10$ compared to the worst-case expectation.
+and leads to a speed-up of~$≈ 4$ compared to the worst-case expectation.
 This has no apparent security implication
 since the final prime number is pseudo-random anyway;
 the only performance penalty is the cost of generating new primes,
@@ -1053,6 +1071,87 @@ or a number derived from stock market or sports results.
 
 \subsection{A concrete example}
 
+\subsubsection{Certificate format}
+
+We suggest that the certificate should be separated in three parts.
+First, a header declares which choices were made:
+the sampling function, the seed (if applicable),
+as well as the subset of conditions retained from part~\ref{s:criteria}
+with the numeric values of these criteria.
+The validation program is then able,
+upon reading the header and prior to any computation,
+to determine if it accepts the included criteria.
+
+The second part of the certificate is the final, “good” curve,
+together with a proof for all the criteria.
+The last part is the list of sampled curves,
+each one accompanied by a proof for its rejection.
+
+\subsubsection{The example}
+
+We chose the following sampling function as an example
+of “pseudo-random” curves.
+Starting from a seed~$s$, we define $p$~as the smallest prime~$≥ s$
+and $g$~as the smallest generator of the multipliative group~$(ℤ/pℤ)^{×}$.
+We then iterate over the curves with~$a = -3$ (\ref{sss:a=-3})
+of the form $y^2 = x^3 - 3 x + b$, where $b = g^n$ for~$n = 1, …$,
+until a suitable curve is found%
+\footnote{We use powers of~$g$ as a simple way to produce pseudo-random
+looking elements of~$(ℤ/pℤ)^{×}$ only for the sake of this toy example.
+An actual, working example should of course involve a more robust
+pseudo-random number generator.}.
+
+We also include the following conditions:
+\begin{itemize} \itemsep 0pt \parskip 0pt
+\item the discriminant~$2^4·3^3·(4-b^2)$ is non-zero
+(\ref{sss:singular});
+\item the orders of the curve (\ref{sss:prime}) and of its quadratic twist
+(\ref{sss:twist}) are prime;
+\item the trace is non-zero (\ref{sss:anomalous});
+\item the embedding degree of the curve and of its quadratic twist
+(\ref{sss:embedding-degree}) are at least~$p^{1/4} ≈ 7$;
+\item the class number (\ref{sss:class-group}) is at least~$p^{1/4}$.
+\end{itemize}
+
+As a seed, we use the current year~$2015$\footnote{%
+Note that this seed choice \emph{was} manipulated,
+in order to produce a certificate short enough to fit in a few lines.}.
+The next prime number is~$p = 2017$, and the smallest generator is~$g = 5$.
+
+The resulting certificate, in pseudo-code, is as follows.
+(Given the size of the parameters,
+all proofs of primality have been left empty).
+
+% Gadget certificate <<<
+\begingroup \advance \leftskip 1em \advance \rightskip 1em
+\parindent 0pt \sffamily
+\def\header#1{\par\goodbreak \textbf{#1}
+\vskip -2ex \leavevmode \leaders\vrule height 1pt \hfill \hbox{}
+\par}
+
+\header{Header}
+sampling.function = \texttt{pseudo-random/powers}\\
+sampling.seed = \texttt{2015}\\
+condition.cofactor = \texttt{1}\\
+condition.twist\_prime = \texttt{True}\\
+condition.embedding\_degree = \texttt{7}\\
+condition.twist\_embedding\_degree = \texttt{7}\\
+condition.class\_number = \texttt{7}
+
+\header{Curve}
+$(2017, -3, 625)$\\
+order = $2063$, point = (0, 25)\\
+twist\_order = $1971$\\
+disc\_factorization = $(6043)$\\
+class\_number = 9, form = $(17,3,89)$
+
+\header{Rejected curves}
+($(2017, -3, 5)$, composite, $2065$, witness, $1679$,
+  point, $(1,258)$)\\
+($(2017, -3, 25)$, torsion\_point, 3, point, $(448, 288)$)\\
+($(2017, -3, 125)$, torsion\_point, 2, point, $(982, 0)$)
+
+\endgroup%>>>
 
 \section{Public families of elliptic curves}
 
