@@ -885,10 +885,10 @@ and in a few percent of cases for cryptographic sizes.
 \smallskip
 
 In both cases, it is possible to produce a certificate of composition
-of the curve order in the following form: $(N/c, G, Π)$,
-where $N/c$~is a composite number,%a number such that~$N < 2 (√p - 1)^2$,
-$Π$~is a proof of composition of~$N/c$,
-and $G$~is a point of the curve such that~$(N/c) G = 0$.
+of the curve order in the following form: $(n, G, Π)$,
+where $n$~is a composite number coprime to the cofactor,
+$Π$~is a proof of composition of~$n$,
+and $G$~is a point of the curve such that~$n· G = 0$.
 Namely, in the “early” case, since we know a point~$G$ such that~$ℓ G = 0$,
 we may output the certificate~$(2 ℓ, G, Π)$
 where $Π$~is a certificate of composition of~$2 ℓ$.
