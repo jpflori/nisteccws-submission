@@ -295,7 +295,7 @@ requires computing the group order~$N$,
 which is a moderately expensive task.
 For curves over large prime fields,
 the most efficient algorithms are variations
-of the SEA algorithm~\cite{mathcomp1985schoof,
+of the SEA algorithm~\cite{mc1985schoof,
 jtnb1995schoof,smf2008cl} with complexity~$O(\log(q)^4)$.
 
 The probability that a random elliptic curve over~$\F_p$
@@ -432,12 +432,11 @@ Some common parameter choices,
 such as the NIST elliptic curves~\cite{nist2000fips186-2},
 use as their base field a prime field~$\F_p$
 where $p$~is a prime number of a ``special form'',
-such as a Mersenne, pseudo-Mersenne or generalized Mersenne numbers.
+such as a pseudo-Mersenne or generalized Mersenne numbers
+or values of cyclotomic polynomials~\cite{mc2013gm}.
 While the use of such prime numbers speeds up the modular arithmetic,
 they are also more vulnerable to some side-channel attacks%
-~\cite{ches2005dkj,ics2005ss,ches2014bpsy,eprint2014-434}.
-
-\XXX demander la référence à Emmanuel
+~\cite{ches2005dkj,ics2005ss,ches2014bpsy,eprint2014-434,ieice2006ss}.
 
 \subsubsection{Unified group law}
 \label{sss:unified}
@@ -753,7 +752,7 @@ than Weierstraß coordinates, such as
 Edwards curves~\cite{ams2007edwards},
 twisted Edwards curves~\cite{africa2008bbjl},
 Jacobi curves~\cite{aaaaec2003bj},
-and Montgomery curves~\cite{mathcomp1987montgomery}.
+and Montgomery curves~\cite{mc1987montgomery}.
 Only a finite proportion of curves are isomorphic
 to a curve in these families.
 For example, about~$35\%$ of all elliptic curves
@@ -933,7 +932,7 @@ and $G$~is a random point (such that~$c · G ≠ 0$).
 
 However, in practice, over a prime base field,
 the most efficient methods to compute the curve order are
-variants of the $ℓ$-adic SEA algorithm~\cite{mathcomp1985schoof,
+variants of the $ℓ$-adic SEA algorithm~\cite{mc1985schoof,
 jtnb1995schoof,smf2008cl}.
 This algorithm computes the order~$N$ of the curve
 by computing $N \pmod{ℓ}$ for several
@@ -1015,10 +1014,10 @@ If this is the case, then $N$~is the curve order.
 
 For the sizes involved in elliptic curve cryptography,
 proving the primality is practical using a test such as
-the APR-CL test~\cite{fcs1980adleman,mathcomp1984cl}.
+the APR-CL test~\cite{fcs1980adleman,mc1984cl}.
 In the case where the validation program runs under strong contraints,
 it is also possible to write a primality certificate
-in a form such as ECPP~\cite{mathcomp1993am},
+in a form such as ECPP~\cite{mc1993am},
 which has a reasonable size~($O(\log^2 p)$ bits)
 and is verifiable in a short time~($O(\log^2 p)$ field operations).
 
