@@ -1179,6 +1179,9 @@ The second part of the certificate is the final, “good” curve,
 together with a proof for all the criteria.
 The last part is the list of sampled curves,
 each one accompanied by a proof for its rejection.
+The certificate should also include enough information about
+the internal state of the sampling function
+to be able to retrace its execution.
 
 \subsubsection{The example}
 
@@ -1266,9 +1269,12 @@ in increasing order.
 However, since these curves are, by construction,
 defined over special prime fields
 and since they also have small coefficients,
-they are exceptional in the sense of section~\ref{ss:normal}.
+they may be threatened in the sense of section~\ref{ss:side}
+and exceptional in the sense of section~\ref{ss:normal}.
 Moreover, most of these curves
 also have a cofactor strictly greater than one.
+
+\bigbreak
 
 We therefore point out that, to our knowledge,
 there does not exist yet any public proposal of an elliptic curve,
