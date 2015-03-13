@@ -68,10 +68,11 @@ for a general cryptographic use,
 such as NIST FIPS 186--2 curves~\cite{nist2000fips186-2},
 Brainpool curves~\cite{rfc5639},
 SECG curves~\cite{certicom2010sec2},
+Curve25519~\cite{pkc2006bernstein},
 ANSSI FRP256v1~\cite{jorf2011ce},
-and Chinese state cryptography administration SM2~\cite{oscca2010sm2}.
+and OSCCA SM2~\cite{oscca2010sm2}.
 Recent years have seen some distrust cast on previously normalized
-curves~\cite{rfc5639,nist2000fips186-2,jorf2011ce,oscca2010sm2}
+curves
 and the emergence of the need to normalize new curves.
 Different parties have spoken their point of view on the (dis)trust they have
 on previously normalized curves whether it is because of
@@ -87,20 +88,22 @@ curve~\cite{pkc2006bernstein,msr2014bcln,eprint2013abgr}.
 
 \medskip
 %<<<2
-We believe it very important not to restrict implementation
-to a single elliptic curve or to a very small family of elliptic curves.
+We believe it very important that the international standards
+do not \emph{a priori} restrict implementation
+to a single elliptic curve
+or to a very small family of related elliptic curves.
 Even though no attack might currently be known,
-the discovery of an attack against this particular family
+the discovery of a weakness of this particular family
 is always a possibility.
-It is therefore important, in the event where such an attack is found,
-that the implementation is flexible enough to be able to
-replace a compromised curve by a safer one.
+% It is therefore important, in the event where such an attack is found,
+% that the implementation is flexible enough to be able to
+% replace a compromised curve by a safer one.
 % Stanardizing only one family of curves seems dangerous to us.
 % Even though no attack may be currently known, the sole argument of simplicity
 % is not sufficient to put all our eggs in the same basket.
-The two main priorities are security and speed.
-Given the current state-of-the-art,
-some compromises between them have to be made.
+As for the choices of the curves themselves
+ans iven the current state-of-the-art,
+some trade-offs between speed and security have to be made.
 For example, most of the recently proposed
 curves~\cite{pkc2006bernstein,msr2014bcln,eprint2013abgr,oscca2010sm2},
 and in particular the NIST standardized curves,
@@ -136,19 +139,21 @@ Nevertheless, \emph{transparency} is achievable and needed for wide adoption of 
 
 \medskip
 
-We don't make an explicit proposal of an elliptic curve in this note,
+In this note, we don't make an explicit proposal of an elliptic curve,
 but we deal with the following issues.
 \\{\bf Security. }
 We give a list of criteria that should be satisfied by
 a secure elliptic curve.
-Although a few of this criteria are incompatible,
+Although a few of these criteria are incompatible,
 we detail what whe think are the best choices for optimal security.
 \\{\bf Transparency. }
-We give a way to generate a curve in a fully transparent way
+We sketch a way to generate a curve in a fully transparent way
 so that it can be trusted and not suspected to
 belong to a (not publicly known to be) vulnerable class.
-In particular, we estimate the computational cost of verifying this,
-and we sketch a certificate format easing the computations.
+In particular, since the computational cost of verifying
+the output of such a process may be quite high,
+we sketch out the format of a \emph{certificate} that eases the computations.
+We think that this format might deserve being standardized.
 
 \section{Criteria for cryptographic elliptic curves}
 \label{s:criteria}
@@ -176,7 +181,7 @@ without weakening (too much) its security.
 
 \subsection*{Incompatible conditions}
 We point out that several of these conditions are mutually incompatible.
-We list them here, in a roughly descending order of priority.
+We list these here, in a roughly descending order of importance.
 
 \paragraph{Choice of the cardinality of the base field
 and the curve coefficients.}
@@ -191,7 +196,7 @@ in view of faster curve arithmetic~(\ref{sss:special-fast})~%
 \paragraph{Cofactor.}
 While the existence of a very small torsion subgroup
 may lead to some attacks such as
-small-subgroup attack~\ref{sss:small-subgroup}
+small-subgroup attack~(\ref{sss:small-subgroup})
 or side-channel attacks~(\ref{sss:special-points}),
 it is a necessary condition for the availability
 of some faster curve coordinates
@@ -212,16 +217,16 @@ curves with a prime twist are themselves exceptional in some way.
 \medskip
 
 Because of all these incompatibilities,
-we think that several curves and curve families should be used,
 so that each implementation might select the appropriate curve
 depending on the context,
 such as performance constraints or the likelihood of side-channel attacks.
-In particular, we think that there should exist elliptic curves
+In particular, we think that
+international standard should include a family of curves
 where each of these contradictions is solved in a way
 that maximizes security:
 namely, curves with pseudo-random coefficients,
 defined over a pseudo-rando base field,
-with a cofactor equal to one, and with a secure twist.
+with a cofactor equal to one, and preferably with a secure quadratic twist.
 
 \subsection*{Restriction to prime fields}
 We limit our discussion to elliptic curves defined over a prime field.
@@ -340,7 +345,7 @@ of finite fields has been extended to elliptic curves in a variety of ways.
 However, in the current state-of-the-art, it is more expensive
 to correctly lift the curve and the points defining the DLP than
 to directly solve it~\cite{asia1998ss,dcc2000silverman,dcc2000ksst,ecc2007silverman,sac2008silverman},
-so that such algorithms are not to be considered yet.
+so that we do not believe that these attacks have to be considered.
 
 \subsection{Implementation-dependent security}
 \label{ss:side}
@@ -359,7 +364,8 @@ which make some implementations of the elliptic curve more resistant.
 
 If the point group contains a small subgroup,
 then it may be possible to trick some implementations
-into revealing a few bits of a secret key~\cite{crypto1997ll}.
+into revealing information about the secret key~\cite{crypto1997ll}
+or compromising the output of a key exchange.
 If the curve does not have a small subgroup
 (for example if it has a prime number of points)
 then such attacks are inoperant.
@@ -406,9 +412,9 @@ can be obtained if the twist~$E'$ satisfy
 security conditions similar to those of the curve~$E$ itself.
 Nevertheless, it should be noted that the original curve and
 its twist will never share the same exact behavior against
-side-channel attacks, e.g. exactly one of the two curves the coefficient $b$
-will be a square which is unoptimal against side channel attacks
-as the curve will contain a special point of the form~$(0, y)$.
+side-channel attacks, e.g. for exactly one of the two curves the coefficient $b$
+is be a square, which is unoptimal against side channel attacks
+as the curve contains a special point of the form~$(0, y)$.
 Moreover twist security won't protect against potential side channel attacks
 where one would detect if the computation took place on the curve or its twist
 and gain information on some bits of the secret.
@@ -721,7 +727,12 @@ We note that some of these conditions
 \ref{sss:easy-sqrt} and \ref{sss:other-eq}) are satisfied
 by an asymptotically non-zero proportion of all elliptic curves:
 in this case, we believe it very unlikely
-that any attack will be possible against such a wide class of curves.
+that such a wide class of curve would be inherently weak
+against a future attack.
+However, the last two conditions (\ref{sss:special-fast} and
+\ref{sss:special-coeff}) correspond to choices that
+contradict some conditions from sections~\ref{ss:side}
+and \ref{ss:normal} above.
 
 \subsubsection{Fast Jacobian coordinates}
 \label{sss:a=-3}
@@ -795,6 +806,7 @@ the most secure implementations should be able to work with
 a general base field.
 
 \subsubsection{Special coefficients}
+\label{sss:special-coeff}
 
 Most of the formulas for elliptic curve arithmetic
 involve the use of the curve coefficients.
@@ -975,11 +987,11 @@ so that computing this extra information
 has a small impact on computation time.
 
 The certificate in this case is the list $(ℓ, P)$,
-where $P$~is a point of order~$ℓ$\footnote{%
+where $P$~is a point of order~$ℓ$.\footnote{%
 It is also possible, although slightly less efficient,
 to conform to the preceding certificate format
 by using the list~$(2 ℓ, 2, P)$,
-since $a = 2$~is a witness of composition for~$2ℓ$.}.
+since $a = 2$~is a witness of composition for~$2ℓ$.}
 
 We also note that, if the list of conditions
 include the primality of the twisted curve,
@@ -1053,7 +1065,8 @@ cardinality of the base field,
 with a variation of a factor~$≈ 10$ for a given size of prime numbers.
 This means that,
 in the case where a pseudo-random base field is preferred,
-the sampling function for elliptic curves should change the base field
+we suggest that
+the sampling function for elliptic curves change the base field
 for each new curve, to avoid being stuck at a ``bad'' prime.
 This averages out the probabilities
 and leads to a speed-up of~$≈ 4$ compared to the worst-case expectation.
@@ -1154,8 +1167,11 @@ until a suitable elliptic curve is found.
 Even though we think that a curve satisfying the normality conditions
 of section~\ref{ss:normal} will generally be as good as possible
 for cryptographic use,
-a supplementary precaution against this manipulation
-would be to put the seed choice out of reach of the generating entity.
+and using a highly constrained seed (such as zero)
+would be sufficient in practice,
+we could imagine as a supplementary precaution against this manipulation
+to first fully specify the generating protocol in all its details,
+and to put the seed choice out of reach of the generating entity.
 Several examples come to mind.
 For example, several entities could contribute to the seed,
 each one of them generating its own secret share
@@ -1188,7 +1204,7 @@ The certificate should also include enough information about
 the internal state of the sampling function
 to be able to retrace its execution.
 
-\subsubsection{The example}
+\subsubsection{A toy example}
 
 We chose the following sampling function as an example
 of “pseudo-random” curves.
@@ -1196,11 +1212,11 @@ Starting from a seed~$s$, we define $p$~as the smallest prime~$≥ s$
 and $g$~as the smallest generator of the multipliative group~$(ℤ/pℤ)^{×}$.
 We then iterate over the curves with~$a = -3$ (\ref{sss:a=-3})
 of the form $y^2 = x^3 - 3 x + b$, where $b = g^n$ for~$n = 1, …$,
-until a suitable curve is found%
+until a suitable curve is found.%
 \footnote{We use powers of~$g$ as a simple way to produce pseudo-random
 looking elements of~$(ℤ/pℤ)^{×}$ only for the sake of this toy example.
 An actual, working example should of course involve a more robust
-pseudo-random number generator.}.
+pseudo-random number generator.}
 
 We also include the following conditions:
 \begin{itemize} \itemsep 0pt \parskip 0pt
@@ -1214,9 +1230,9 @@ We also include the following conditions:
 \item the class number (\ref{sss:class-group}) is at least~$p^{1/4}$.
 \end{itemize}
 
-As a seed, we use the current year~$2015$\footnote{%
+As a seed, we use the current year~$2015$.\footnote{%
 Note that this seed choice \emph{was} manipulated,
-in order to produce a certificate short enough to fit in a few lines.}.
+in order to produce a certificate short enough to fit in a few lines.}
 The next prime number is~$p = 2017$, and the smallest generator is~$g = 5$.
 
 The resulting certificate, in pseudo-code, is as follows.
@@ -1265,7 +1281,7 @@ This is the case of the Brainpool family,
 where the sampling function generates
 curves defined over pseudo-random prime fields,
 with pseudo-random coefficients,
-with the slight reserve that the generating process did not include
+with the slight reservation that the generating process does not include
 the condition that the order of the quadratic twist be
 prime~(\ref{sss:twist}).
 This is also the case of some curves with small coefficients,
