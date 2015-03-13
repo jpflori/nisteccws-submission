@@ -35,10 +35,10 @@
 \pagestyle{empty}
 
 \hypersetup{pdftitle={Diversity and transparency for ECC},%
-  pdfauthor={Jean-Pierre Flori and Jérôme Plût and Jean-René Reinhard},%
+  pdfauthor={Jean-Pierre Flori and Jérôme Plût},%
   pdfsubject={Elliptic Curve Cryptography},%
-  pdfcreator={Jean-Pierre Flori and Jérôme Plût and Jean-René Reinhard},%
-  pdfproducer={Jean-Pierre Flori and Jérôme Plût and Jean-René Reinhard},%
+  pdfcreator={Jean-Pierre Flori and Jérôme Plût},%
+  pdfproducer={Jean-Pierre Flori and Jérôme Plût},%
   pdfkeywords={mathematics} {cryptography} {elliptic curves} {discrete logarithm problem} {security}
  {diversity} {transparency},
 }
@@ -49,7 +49,7 @@
 Secrétariat général de la défense et de la sécurité nationale\newline%
 51, boulevard de La Tour-Maubourg\newline%
 75700 Paris 07 SP}%
-\and Jérôme Plût\footnotemark[1] \and Jean-René Reinhard\footnotemark[1]}
+\and Jérôme Plût\footnotemark[1]}
 \date{}
 
 \begin{document}
@@ -447,7 +447,7 @@ such as a pseudo-Mersenne or generalized Mersenne numbers
 or values of cyclotomic polynomials~\cite{mc2013gm}.
 While the use of such prime numbers speeds up the modular arithmetic,
 they are also more vulnerable to some side-channel attacks%
-~\cite{ches2005dkj,ics2005ss,ches2014bpsy,eprint2014-434,ieice2006ss}.
+~\cite{ches2005dkj,ics2005ss,ches2014bpsy,eprint2014-434,ieice2006ss,indo2014frv}.
 The use of a non-special, pseudo-random base field
 prevents this class of attacks.
 
@@ -459,9 +459,11 @@ addition law: these formulas have no exceptional cases
 such as~$P + P$, $P + (-P)$ or~$P + 0$ for Weierstraß curves.
 When using such formulas, a point multiplication
 is computed in constant time relatively to the scalar,
-which adds a layer of protection against side-channel attacks.
-
-However, these families all have a non-trivial cofactor.
+which adds a layer of protection against some side-channel attacks.
+However, this does not offer an absolute protection~\cite{indo2014frv}.
+Moreover, these families all have a non-trivial cofactor,
+which could be considered as a threat
+in light of~\ref{sss:small-subgroup} or~\ref{sss:special-points} above.
 
 \subsection{Normality of the curve}
 \label{ss:normal}
