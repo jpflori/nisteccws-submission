@@ -53,7 +53,11 @@ Secrétariat général de la défense et de la sécurité nationale\newline%
 \date{}
 
 \begin{document}
-\sloppy \maketitle
+\sloppy
+\gitkw $Id: $
+\gitkw $Author: $
+\gitkw $Date: $
+\maketitle
 % Introduction <<<1
 %<<<2
 Generating and normalizing elliptic curves to use them in a cryptographic
@@ -1259,9 +1263,9 @@ sketched out in section~\ref{s:certif}.
 This is the case of the Brainpool family,
 where the sampling function generates
 curves defined over pseudo-random prime fields,
-with pseudo-random coefficients;
-however, the generating process does not include
-the condition that the order of the quadratic twist must be
+with pseudo-random coefficients,
+with the slight reserve that the generating process did not include
+the condition that the order of the quadratic twist be
 prime~(\ref{sss:twist}).
 This is also the case of some curves with small coefficients,
 where the sampling function generates the coefficients
