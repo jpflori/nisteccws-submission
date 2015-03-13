@@ -437,6 +437,8 @@ or values of cyclotomic polynomials~\cite{mc2013gm}.
 While the use of such prime numbers speeds up the modular arithmetic,
 they are also more vulnerable to some side-channel attacks%
 ~\cite{ches2005dkj,ics2005ss,ches2014bpsy,eprint2014-434,ieice2006ss}.
+The use of a non-special, pseudo-random base field
+prevents this class of attacks.
 
 \subsubsection{Unified group law}
 \label{sss:unified}
@@ -768,7 +770,7 @@ method for discrete logarithms by a small factor~\cite{moc2000glv}.
 Moreover, in the case of a non-prime base field,
 there exist some attacks~\cite{jc2014fghr}
 against several of these curve families
-which somewhat weaken the discrete logarithm problem.
+which slightly weaken the discrete logarithm problem.
 
 \subsubsection{Fast base field arithmetic}
 \label{sss:special-fast}
@@ -779,6 +781,14 @@ a pseudo-Mersenne~\cite{pkc2006bernstein}
 or generalized Mersenne prime~\cite{nist2000fips186-2},
 allows the implementation of a faster, dedicated arithmetic.
 
+However, taking full advantage of these optimizations
+needs restricting the implementation to a particular, very small
+family of elliptic curves.
+Therefore, we think that, for optimal security and in view of
+paragraphs~\ref{sss:special-side} and~\ref{sss:special-anormal} above,
+the most secure implementations should be able to work with
+a general base field.
+
 \subsubsection{Special coefficients}
 
 Most of the formulas for elliptic curve arithmetic
@@ -786,6 +796,10 @@ involve the use of the curve coefficients.
 Choosing special values for these coefficients,
 such as integers with a small absolute value,
 allows a faster implementation.
+
+However, as in the previous paragraph, we think that
+restricting implementation to benefit from these optimizations
+might be a security threat.
 
 \subsection{Families of curves with particular properties}
 \label{ss:particular}
