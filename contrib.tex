@@ -42,7 +42,7 @@
   pdfkeywords={mathematics} {cryptography} {elliptic curves} {discrete logarithm problem} {security}
  {diversity} {transparency},
 }
-\def\gitkw$#1:#2${{\small \textbf{#1:}\texttt{#2}}}
+\def\gitkw$#1:#2${{\small \textbf{#1:} \texttt{#2}}}
 
 \title{Diversity and transparency for ECC}
 \author{Jean-Pierre Flori\thanks{Agence nationale de la sécurité des systèmes d'information\newline%
@@ -54,10 +54,11 @@ Secrétariat général de la défense et de la sécurité nationale\newline%
 
 \begin{document}
 \sloppy
-\gitkw $Id: $
-\gitkw $Author: $
-\gitkw $Date: $
 \maketitle
+\thispagestyle{fancy}\cfoot{}
+\lhead{\gitkw $Author:$}
+\chead{\gitkw $Id:$}
+\rhead{\gitkw $Date:$}
 % Introduction <<<1
 %<<<2
 Generating and normalizing elliptic curves to use them in a cryptographic
@@ -1233,7 +1234,7 @@ all proofs of primality have been left empty).
 sampling.function = \texttt{pseudo-random/powers}\\
 sampling.seed = $2015$\\
 condition.cofactor = $1$\\
-condition.twist\_prime = \texttt{True}\
+condition.twist\_prime = \texttt{True}\\
 condition.embedding\_degree = $7$\\
 condition.twist\_embedding\_degree = $7$\\
 condition.class\_number = $7$
