@@ -21,6 +21,7 @@
 \let\fr\mathfrak
 \def\abs#1{\left|#1\right|}
 \def\pa#1{\left(#1\right)}
+\def\acco#1{\left\{#1\right\}}
 \DeclareMathOperator\End{End}
 \DeclareMathOperator\Cl{Cl}
 
@@ -84,7 +85,7 @@ curve~\cite{pkc2006bernstein,msr2014bcln,eprint2013abgr}.
 We believe it very important not to restrict implementation
 to a single elliptic curve or to a very small family of elliptic curves.
 Even though no attack might currently be known,
-the existence of an attack against this particular family
+the discovery of an attack against this particular family
 is always a possibility.
 It is therefore important, in the event where such an attack is found,
 that the implementation is flexible enough to be able to
@@ -128,26 +129,24 @@ Therefore, \emph{rigidity} as sometimes advertized~\cite{safecurves} seems illus
 to us.
 Nevertheless, \emph{transparency} is achievable and needed for wide adoption of ECC.
 
+\medskip
 
-\XXX reformuler ceci:
-pas de courbe;
-des critères, dont certains en contradiction, mais on a des préfs;
-un certificat validant ceci.
-
-In this note, we only deal with both the aforementioned issues:\\
-{\bf Security. }
-What criteria should a secure elliptic curve verify, what flexibility is
-available and what kind of diversity is desirable?\\
-{\bf Transparency. }
-How to generate a curve in a transparent way so that it can be trusted and
-not suspected to fall in a (not publicly known to be) vulnerable class?
-
-No proposal of curve is made, though a proposal for a certificate format
-easing the verification of the generation of a curve is made.
+We don't make an explicit proposal of an elliptic curve in this note,
+but we deal with the following issues.
+\\{\bf Security. }
+We give a list of criteria that should be satisfied by
+a secure elliptic curve.
+Although a few of this criteria are incompatible,
+we detail what whe think are the best choices for optimal security.
+\\{\bf Transparency. }
+We give a way to generate a curve in a fully transparent way
+so that it can be trusted and not suspected to
+belong to a (not publicly known to be) vulnerable class.
+In particular, we estimate the computational cost of verifying this,
+and we sketch a certificate format easing the computations.
 
 \section{Criteria for cryptographic elliptic curves}
 \label{s:criteria}
-
 %<<<2
 We give here a list of useful criteria for selecting elliptic curves
 for general cryptographic use.
@@ -155,8 +154,9 @@ We sort these conditions in several categories,
 with different importance being granted to each category.
 The first category~(\ref{ss:dlp}) contains the minimal conditions under which
 the discrete logarithm problem may be hard in the point group.
-The second category~(\ref{ss:side}) describes some properties that improve
-the resistance of the curve to some common side-channel attacks.
+The second category~(\ref{ss:side}) describes some properties that
+may improve the resistance of some implementation of the curve,
+particularly in a context where side-channel attacks must be considered.
 The third one~(\ref{ss:normal}) is not related to any known attack;
 instead, it gives condition under which a curve may be considered
 as particular and therefore maybe particularly vulnerable
@@ -169,9 +169,9 @@ without weakening (too much) its security.
 
 \bigbreak
 
-%<<<2
-We point out that several of these conditions are in contradiction
-with each other.
+\subsection*{Incompatible conditions}
+We point out that several of these conditions are mutually incompatible.
+We list them here, in a roughly descending order of priority.
 
 \paragraph{Choice of the cardinality of the base field
 and the curve coefficients.}
@@ -186,7 +186,8 @@ in view of faster curve arithmetic~(\ref{sss:special-fast})~%
 \paragraph{Cofactor.}
 While the existence of a very small torsion subgroup
 may lead to some attacks such as
-small-subgroup attack or side-channel attacks~(\ref{sss:special-points}),
+small-subgroup attack~\ref{sss:small-subgroup}
+or side-channel attacks~(\ref{sss:special-points}),
 it is a necessary condition for the availability
 of some faster curve coordinates
 such as Edwards or Montgomery curves~(\ref{sss:other-eq}).
@@ -205,13 +206,19 @@ curves with a prime twist are themselves exceptional in some way.
 
 \medskip
 
-Because of all these contradictory conditions,
+Because of all these incompatibilities,
 we think that several curves and curve families should be used,
 so that each implementation might select the appropriate curve
 depending on the context,
 such as performance constraints or the likelihood of side-channel attacks.
+In particular, we think that there should exist elliptic curves
+where each of these contradictions is solved in a way
+that maximizes security:
+namely, curves with pseudo-random coefficients,
+defined over a pseudo-rando base field,
+with a cofactor equal to one, and with a secure twist.
 
-\paragraph{Prime fields.}%<<<2
+\subsection*{Restriction to prime fields}
 We limit our discussion to elliptic curves defined over a prime field.
 In the case of extension fields,
 some attacks exist in particular
@@ -225,11 +232,11 @@ the multiplicative discrete logarithm problem~\cite{euro2014bgjt}.
 For all these reasons, we consider elliptic curves over prime fields
 as probably much safer than elliptic curves over extension fields.
 
-We consider the base field itself as one of the parameters
-of the elliptic curve.
-We believe that the safest case is that of a pseudo-random prime
-number~(\ref{sss:special-anormal}).
-\XXX
+% We consider the base field itself as one of the parameters
+% of the elliptic curve.
+% We believe that the safest case is that of a pseudo-random prime
+% number~(\ref{sss:special-anormal}).
+% \XXX
 
 
 \subsection*{Notations}
@@ -342,9 +349,16 @@ or on the ease of implementation of appropriate counter-measures.
 We give here a list of criteria
 which make some implementations of the elliptic curve more resistant.
 
-\subsubsection{Small subgroup}
+\subsubsection{Absence of small subgroups}
+\label{sss:small-subgroup}
 
-\XXX
+If the point group contains a small subgroup,
+then it may be possible to trick some implementations
+into revealing a few bits of a secret key~\cite{crypto1997ll}.
+If the curve does not have a small subgroup
+(for example if it has a prime number of points)
+then such attacks are inoperant.
+Otherwise, protecting against them requires a few more point operations.
 
 \subsubsection{Absence of special points}
 \label{sss:special-points}
@@ -411,7 +425,7 @@ Although this property of twist-security is quite rare,
 the curves satisfying it are not special
 in the sense of section~\ref{ss:normal}.
 
-\subsubsection{Special base field}
+\subsubsection{Non-special base field}
 \label{sss:special-side}
 
 Some common parameter choices,
@@ -833,7 +847,12 @@ including the choice of the sampling function for elliptic curves.
 That is why we think \emph{rigidity} as often advertized~\cite{safecurves}
 is illusory, and we prefer the notion of \emph{transparency}.
 
-\XXX choix du nombre premier et du point
+We point out that the standard parameters for ECC
+include not only the curve, but also its definition field
+and a point generating a prime-order group in the curve.
+While we know of no weakness related to the choice of this point,
+precaution still commands that this choice should also be justified.
+
 
 Checking that the generation process,
 with a known algorithm and a public seed,
@@ -1086,7 +1105,19 @@ the class number is not smooth.
 
 \subsection{Embedding degree}
 
-\XXX
+The embedding degree of~$E$ is the smallest integer~$e$
+such that $q$~divides~$p^{e-1}$;
+this is also the multiplicative order of~$p$ modulo~$q$.
+Computing this embedding degree requires factoring~$q-1$,
+which is in general a quite expensive computation.
+However, this factorization, which is the only expensive task
+in the computation of the embedding degree,
+is easy to include in the certificate.
+
+We note that the embedding degree of the quadratic twist
+is distinct from that of the curve;
+therefore, if twist security is required,
+then this computation will need to be performed twice.
 
 \subsection{Choice of the sampling function}
 
@@ -1180,19 +1211,21 @@ all proofs of primality have been left empty).
 
 \header{Header}
 sampling.function = \texttt{pseudo-random/powers}\\
-sampling.seed = \texttt{2015}\\
-condition.cofactor = \texttt{1}\\
-condition.twist\_prime = \texttt{True}\\
-condition.embedding\_degree = \texttt{7}\\
-condition.twist\_embedding\_degree = \texttt{7}\\
-condition.class\_number = \texttt{7}
+sampling.seed = $2015$\\
+condition.cofactor = $1$\\
+condition.twist\_prime = \texttt{True}\
+condition.embedding\_degree = $7$\\
+condition.twist\_embedding\_degree = $7$\\
+condition.class\_number = $7$
 
 \header{Curve}
 $(2017, -3, 625)$\\
-order = $2063$, point = (0, 25)\\
-twist\_order = $1971$\\
-disc\_factorization = $(6043)$\\
-class\_number = 9, form = $(17,3,89)$
+order = $2063$, point = $(0, 25)$\\
+twist\_order = $1973$\\
+disc\_factors = $\acco{6043}$\\
+class\_number = $9$, form = $(17,3,89)$\\
+embedding\_degree = $1031$, factors = $\acco{2, 1031}$\\
+twist\_embedding\_degree = $493$, factors = $\acco{2, 17, 29}$
 
 \header{Rejected curves}
 ($(2017, -3, 5)$, composite, $2065$, witness, $1679$,
