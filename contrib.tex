@@ -57,27 +57,27 @@ Secrétariat général de la défense et de la sécurité nationale\newline%
 \begin{document}
 \sloppy
 \maketitle
-\thispagestyle{fancy}\cfoot{}
+% \thispagestyle{fancy}\cfoot{}
 \lhead{\gitkw $Author:$}
 \chead{\gitkw $Id:$}
 \rhead{\gitkw $Date:$}
 % Introduction <<<1
 %<<<2
-Generating and normalizing elliptic curves to use them in a cryptographic
+Generating and standardizing elliptic curves to use them in a cryptographic
 context is a hard task.
 There have been several attempts to define public elliptic curves
 for a general cryptographic use,
 such as NIST FIPS 186--2 curves~\cite{nist2000fips186-2},
 Brainpool curves~\cite{rfc5639},
 SECG curves~\cite{certicom2010sec2},
-Curve25519~\cite{pkc2006bernstein},
 ANSSI FRP256v1~\cite{jorf2011ce},
+Curve25519~\cite{pkc2006bernstein},
 and OSCCA SM2~\cite{oscca2010sm2}.
-Recent years have seen some distrust cast on previously normalized
+Recent years have seen some distrust cast on previously standardized
 curves
-and the emergence of the need to normalize new curves.
+and the emergence of the need to standardize new curves.
 Different parties have spoken their point of view on the (dis)trust they have
-on previously normalized curves whether it is because of
+on previously standardized curves whether it is because of
 the properties they verify or don't verify
 or the process used to generate them.
 Such analyses often come with
@@ -91,7 +91,7 @@ curve~\cite{pkc2006bernstein,msr2014bcln,eprint2013abgr}.
 \medskip
 %<<<2
 We believe it is very important that the international standards
-do not \emph{a priori} restrict implementation
+do not \emph{a priori} restrict practical uses of ECC
 to a single elliptic curve
 or to a very small family of related elliptic curves.
 Even though no attack might currently be known,
@@ -438,12 +438,12 @@ including twist-security in the conditions is particularly expensive,
 since all necessary checks will be performed on
 a quadratic (in $\log p$) number of elliptic curves.
 In particular, in view of
-the certificates mentioned in section~\ref{s:certif},
+the certificates mentioned in Section~\ref{s:certif},
 both the size and the cost of validation of the certificate
 increase by a linear factor.
 Although this property of twist-security is quite rare,
 the curves satisfying it are not special
-in the sense of section~\ref{ss:normal}.
+in the sense of Section~\ref{ss:normal}.
 
 \subsubsection{Non-special base field}
 \label{sss:special-side}
@@ -840,7 +840,7 @@ might be a security threat.
 We give here a short list of families of curves
 with particular properties which might be useful in some specific contexts.
 These families are small enough
-to contradict the ``normality'' conditions of section~\ref{ss:normal}.
+to contradict the ``normality'' conditions of Section~\ref{ss:normal}.
 
 \subsubsection{Curves with a fast endomorphism}
 
@@ -1179,7 +1179,7 @@ The previous algorithms provide, to the best of our knowledge,
 a certifiable way to transparently generate a cryptographic elliptic curve
 from the input of some conditions and a sampling function.
 In the case where the generating function is considered as pseudo-random
-and the normality conditions of section~\ref{ss:normal} are included,
+and the normality conditions of Section~\ref{ss:normal} are included,
 we feel confident that the resulting elliptic curve
 will not have any particular weakness.
 However, a malicious generating program, given enough computing resources,
@@ -1188,7 +1188,7 @@ for a large family of seeds of a pseudo-random function
 until a suitable elliptic curve is found (see~\cite{badass}).
 
 Even though we think that a curve satisfying the normality conditions
-of section~\ref{ss:normal} will generally be as good as possible
+of Section~\ref{ss:normal} will generally be as good as possible
 for cryptographic use,
 and using a highly constrained seed (such as zero)
 would be sufficient in practice,
@@ -1301,7 +1301,7 @@ twist\_embedding\_degree = $493$, factors = $\acco{2, 17, 29}$
 
 Some of the publicly announced elliptic curves,
 are provably sampled, in a way conforming to the presentation
-sketched out in section~\ref{s:certif}.
+sketched out in Section~\ref{s:certif}.
 This is the case of the Brainpool family,
 where the sampling function generates
 curves defined over pseudo-random prime fields,
@@ -1315,8 +1315,8 @@ in increasing order.
 However, since these curves are, by construction,
 defined over special prime fields
 and since they also have small coefficients,
-they may be threatened in the sense of section~\ref{ss:side}
-and exceptional in the sense of section~\ref{ss:normal}.
+they may be threatened in the sense of Section~\ref{ss:side}
+and exceptional in the sense of Section~\ref{ss:normal}.
 Moreover, most of these curves
 also have a cofactor strictly greater than one.
 
@@ -1325,8 +1325,8 @@ also have a cofactor strictly greater than one.
 We therefore point out that, to our knowledge,
 there does not exist yet any public proposal of an elliptic curve,
 or of a family of elliptic curves, conforming both
-to the provable generation of section~\ref{s:certif}
-and to the maximal security criteria of section~\ref{s:criteria}
+to the provable generation of Section~\ref{s:certif}
+and to the maximal security criteria of Section~\ref{s:criteria}
 and in particular of~\ref{ss:dlp}, \ref{ss:side} and~\ref{ss:normal},
 \emph{i.e.} with pseudo-random coefficients
 modulo a pseudo-random prime,
