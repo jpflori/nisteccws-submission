@@ -35,10 +35,10 @@
 \pagestyle{empty}
 
 \hypersetup{pdftitle={Diversity and transparency for ECC},%
-  pdfauthor={Jean-Pierre Flori and Jérôme Plût},%
+  pdfauthor={Jean-Pierre Flori and Jérôme Plût and Jean-René Reinhard and Martin Ekerå},%
   pdfsubject={Elliptic Curve Cryptography},%
-  pdfcreator={Jean-Pierre Flori and Jérôme Plût},%
-  pdfproducer={Jean-Pierre Flori and Jérôme Plût},%
+  pdfcreator={Jean-Pierre Flori and Jérôme Plût and Jean-René Reinhard and Martin Ekerå},%
+  pdfproducer={Jean-Pierre Flori and Jérôme Plût and Jean-René Reinhard and Martin Ekerå},%
   pdfkeywords={mathematics} {cryptography} {elliptic curves} {discrete logarithm problem} {security}
  {diversity} {transparency},
 }
@@ -49,7 +49,9 @@
 Secrétariat général de la défense et de la sécurité nationale\newline%
 51, boulevard de La Tour-Maubourg\newline%
 75700 Paris 07 SP}%
-\and Jérôme Plût\footnotemark[1]}
+\and Jérôme Plût\footnotemark[1]%
+\and Jean-René Reinhard\footnotemark[1]%
+\and Martin Ekerå\thanks{}}
 \date{}
 
 \begin{document}
@@ -63,7 +65,7 @@ Secrétariat général de la défense et de la sécurité nationale\newline%
 %<<<2
 Generating and normalizing elliptic curves to use them in a cryptographic
 context is a hard task.
-There have been several attempts to define public elliptic curve
+There have been several attempts to define public elliptic curves
 for a general cryptographic use,
 such as NIST FIPS 186--2 curves~\cite{nist2000fips186-2},
 Brainpool curves~\cite{rfc5639},
@@ -88,7 +90,7 @@ curve~\cite{pkc2006bernstein,msr2014bcln,eprint2013abgr}.
 
 \medskip
 %<<<2
-We believe it very important that the international standards
+We believe it is very important that the international standards
 do not \emph{a priori} restrict implementation
 to a single elliptic curve
 or to a very small family of related elliptic curves.
@@ -102,7 +104,7 @@ is always a possibility.
 % Even though no attack may be currently known, the sole argument of simplicity
 % is not sufficient to put all our eggs in the same basket.
 As for the choices of the curves themselves
-ans iven the current state-of-the-art,
+and given the current state-of-the-art,
 some trade-offs between speed and security have to be made.
 For example, most of the recently proposed
 curves~\cite{pkc2006bernstein,msr2014bcln,eprint2013abgr,oscca2010sm2},
@@ -139,7 +141,7 @@ Nevertheless, \emph{transparency} is achievable and needed for wide adoption of 
 
 \medskip
 
-In this note, we don't make an explicit proposal of an elliptic curve,
+In this note, we don't make an explicit proposal for an elliptic curve,
 but we deal with the following issues.
 \\{\bf Security. }
 We give a list of criteria that should be satisfied by
@@ -165,11 +167,11 @@ with different importance being granted to each category.
 The first category~(\ref{ss:dlp}) contains the minimal conditions under which
 the discrete logarithm problem may be hard in the point group.
 The second category~(\ref{ss:side}) describes some properties that
-may improve the resistance of some implementation of the curve,
+may improve security for some implementations,
 particularly in a context where side-channel attacks must be considered.
 The third one~(\ref{ss:normal}) is not related to any known attack;
 instead, it gives condition under which a curve may be considered
-as particular and therefore maybe particularly vulnerable
+as particular and therefore potentially particularly vulnerable
 to some yet-unknown attack.
 Finally, the last two categories group some properties
 which may be desirable about the curve,
@@ -217,15 +219,15 @@ curves with a prime twist are themselves exceptional in some way.
 \medskip
 
 Because of all these incompatibilities,
-so that each implementation might select the appropriate curve
+each implementation might select an appropriate curve
 depending on the context,
 such as performance constraints or the likelihood of side-channel attacks.
 In particular, we think that
-international standard should include a family of curves
+international standards should include a family of curves
 where each of these contradictions is solved in a way
 that maximizes security:
 namely, curves with pseudo-random coefficients,
-defined over a pseudo-rando base field,
+defined over a pseudo-random base field,
 with a cofactor equal to one, and preferably with a secure quadratic twist.
 
 \subsection*{Restriction to prime fields}
@@ -249,9 +251,9 @@ as probably much safer than elliptic curves over extension fields.
 % \XXX
 
 
-\subsection*{Notations}
+\subsection*{Notation}
 In all the remainder of this document,
-we shall use the following notations:
+we shall use the following notation:
 $p ≥ 5$~is a prime number,
 $k = \F_{p}$ is the finite field with $p$~elements,
 $E: y^2 = x^3 + a\,x + b$~is an elliptic curve defined over~$k$,
@@ -311,7 +313,8 @@ jtnb1995schoof,smf2008cl} with complexity~$O(\log(q)^4)$.
 The probability that a random elliptic curve over~$\F_p$
 has a prime group order is bounded below~\cite{lms2000gm}
 by $\frac{0.44}{\log p}$.
-This condition is the most restrictive in practical use.
+This condition is the most restrictive during the generation
+of a curve in practice.
 
 \subsubsection{Absence of additive transfer}
 \label{sss:anomalous}
@@ -325,7 +328,8 @@ Therefore, elliptic curves with trace~$1$ must be excluded.
 \label{sss:embedding-degree}
 
 The \emph{embedding degree} is the smallest integer~$e$ such that
-$q$~divides~$p^e -1$.
+$q$~divides~$p^e -1$
+(that is the multiplicative order of~$p$ modulo~$q$).
 The pairings attached to the elliptic curve~$E$
 give a group homorphism from~$E(k)$
 to the multiplicative group~$\F_{p^e}^{×}$.
@@ -334,30 +338,35 @@ Therefore, elliptic curves with an embedding degree small enough
 that discrete logarithms are computable in $\F_{p^e}^{×}$
 must be excluded.
 
-Over the base field~$\F_p$, the supersingular curves
-are exactly the curves with trace zero.
-They have an embedding degree~one and must be excluded.
+Over the base field~$\F_p$, supersingular curves
+have an embedding degree~one and must be excluded.
+They are exactly the curves with trace zero
+and can therefore easily be detected.
 
 \subsubsection{Index calculus}
 
-Index calculus used to compute discrete logarithms in multiplicative subgroups
-of finite fields has been extended to elliptic curves in a variety of ways.
-However, in the current state-of-the-art, it is more expensive
+Index calculus techniques developed to compute discrete logarithms
+in multiplicative subgroups of finite fields
+have been extended to elliptic curves in a variety of ways.
+However, in the current state-of-the-art, when the curve is defined over
+a prime field, it is more expensive
 to correctly lift the curve and the points defining the DLP than
-to directly solve it~\cite{asia1998ss,dcc2000silverman,dcc2000ksst,ecc2007silverman,sac2008silverman},
-so that we do not believe that these attacks have to be considered.
+to directly solve it~\cite{asia1998ss,dcc2000silverman,dcc2000ksst,ecc2007silverman,sac2008silverman}.
+Therefore, do not believe that there is any additional check to perform
+in the case of a prime base field.
 
 \subsection{Implementation-dependent security}
 \label{ss:side}
 
 While the existence of some attacks,
-such as side-channel attacks or attacks against badly desined protocols,
-mainly depends upon the implementation of the curve,
+such as side-channel attacks or attacks against badly designed protocols,
+mainly depends upon the implementation,
 in some circumstances the choice of the curve itself
-might have an impact on the effiency of these attacks
+might have an impact on the efficiency of these attacks
 or on the ease of implementation of appropriate counter-measures.
 We give here a list of criteria
-which make some implementations of the elliptic curve more resistant.
+which might improve the security
+of some implementations.
 
 \subsubsection{Absence of small subgroups}
 \label{sss:small-subgroup}
@@ -413,7 +422,7 @@ security conditions similar to those of the curve~$E$ itself.
 Nevertheless, it should be noted that the original curve and
 its twist will never share the same exact behavior against
 side-channel attacks, e.g. for exactly one of the two curves the coefficient $b$
-is be a square, which is unoptimal against side channel attacks
+is a square, which is suboptimal against side channel attacks
 as the curve contains a special point of the form~$(0, y)$.
 Moreover twist security won't protect against potential side channel attacks
 where one would detect if the computation took place on the curve or its twist
@@ -443,7 +452,7 @@ Some common parameter choices,
 such as the NIST elliptic curves~\cite{nist2000fips186-2},
 use as their base field a prime field~$\F_p$
 where $p$~is a prime number of a ``special form'',
-such as a pseudo-Mersenne or generalized Mersenne numbers
+such as pseudo-Mersenne or generalized Mersenne numbers
 or values of cyclotomic polynomials~\cite{mc2013gm}.
 While the use of such prime numbers speeds up the modular arithmetic,
 they are also more vulnerable to some side-channel attacks%
@@ -586,9 +595,10 @@ this condition is extremely unlikely to lead to the rejection of a curve
 and the computation will therefore in practice be performed
 only once for the final curve.
 Moreover, once the factorization of~$D_φ$ is known,
-it is very easy to check again.
+it is very easy to check that the produced
+factorization is correct.
 
-In particular, this approach eliminates
+It should be noted that this criteria automatically eliminates
 the two smallest discriminants~$D_K = -4$ and~$D_K = -3$,
 corresponding to the special curves with $j$-invariant~$1728$ or~$0$.
 
@@ -663,11 +673,13 @@ We recall from paragraph~\ref{sss:twist} above
 that the smoothness of this number has a direct influence
 on the effectiveness of some side-channel attacks.
 
-Since the curve and its quadratic twist
-share the same endomorphism ring,
-they have the same discriminant.
-Therefore, all properties already satisfied
-by the discriminant of the curve are also satisfied by its twist.
+It should be noted that the curve and its quadratic twist
+share the same endomorphism ring.
+Therefore the discriminant and class number criteria
+are automatically satisfied by the twist
+if they are satisfied by the original curve.
+This is not true as far as the embedding degree is concerned.
+The original curve and its twist have distinct embedding degrees.
 
 \subsubsection{Non-special base field}
 \label{sss:special-anormal}
@@ -722,7 +734,8 @@ $(p-1)$~has at least one prime divisor greater than~$(\log p)^2$.
 \label{ss:convenience}
 
 We list here a few criteria that
-may make the implementation of an elliptic curve more convenient
+may make thee implementation of
+an elliptic curve more convenient
 without weakening the security.
 We note that some of these conditions
 (namely \ref{sss:a=-3}, \ref{sss:few-points},
@@ -763,6 +776,7 @@ one bit discriminating between the two possible values~$±y$.
 However, recovering~$y$ requires computing a square root in~$k$.
 This is easier when~$p ≡ 3 \pmod{4}$ since
 in this case, $c^{(p+1)/2}$~is a square root of~$c$ if $c$~is a square.
+(Similar formulas exist as soon as~$p \neq 1 \pmod{8}$.)
 
 \subsubsection{Equations other than Weierstraß}
 \label{sss:other-eq}
@@ -834,10 +848,10 @@ Some families of curves have an easily computable endomorphism.
 This allows a faster implementation of point multiplication%
 ~\cite{crypto2001glv,joc2011gls}, with a theoretical gain of up to 50\%.
 
-However, the construction of these families
-is done via the theory of complex multiplication~\cite{asia2013smith}.
-This requires a small class group,
-in contradiction with paragraph~\ref{sss:class-group}.
+However, the construction of all these families
+relies on the fact that the discriminant
+of the endomorphism field is small~\cite{asia2013smith},
+and is therefore in contradiction with paragraph~\ref{sss:discriminant}.
 
 Moreover, in the presence of an endomorphism of order~$m$,
 the Pollard rho method for computing discrete logarithms
@@ -874,7 +888,7 @@ such as the threshold at which we consider the class number
 to be exceptionally small,
 or the order of the twisted curve to be exceptionnally smooth.
 This implies that the generated curve
-will always depend from arbitrary choices,
+will always depend on arbitrary choices,
 including the choice of the sampling function for elliptic curves.
 That is why we think \emph{rigidity} as often advertized~\cite{safecurves}
 is illusory, and we prefer the notion of \emph{transparency}.
@@ -924,11 +938,12 @@ For most of the ones presented in Section~\ref{s:criteria},
 checking whether a curve is suitable is very fast.
 % XXX ?
 However, three conditions in particular are more expensive:
-namely, the condition that the curve order is prime
+namely, the condition that the curve order is prime or
+only includes the expected small cofactor
 (this condition is expected to be the one condition
 leading to rejection of most of the unsuitable curves,
 so that this check will be performed a large number of times),
-the computation of the class number,
+the computation of the endomorphism ring and class number,
 and the computation of the embedding degree
 (both of which will typically be performed only once, for the final curve).
 
@@ -942,7 +957,7 @@ of curves will be rejected because of a composite group order,
 whereas the first curve found with a prime group order
 will be retained.
 
-\subsubsection{Composite curve order}
+\subsubsection{Rejected curve order}
 
 In general, proving that the curve order,
 is not prime, or has a too large cofactor, is easy:
@@ -952,7 +967,7 @@ then the curve order~$N$ has a composite factor coprime to~$c$.
 Namely, let~$d = \gcd (n, N)$; $d$~is coprime to~$c$.
 Since~$P≠0$, we have~$d≠1$.
 If~$d = N$ then $N$~divides~$n$ and is coprime to~$c$.
-since $n/2$~exceeds the lower Hasse bound~$(√p-1)^2$,
+Since $n/2$~exceeds the lower Hasse bound~$(√p-1)^2$,
 we see that~$N = n$, and therefore $N$~is composite.
 If on the other hand~$d ≠ N$, then $d$~is a strict divisor of~$N$.
 
@@ -971,7 +986,7 @@ This algorithm computes the order~$N$ of the curve
 by computing $N \pmod{ℓ}$ for several
 auxiliary primes~$ℓ < O(\log p)$.
 The fact that $N$~is composite may therefore be detected
-either in an early step,
+in an early step,
 when there exists~$ℓ$ (not dividing an allowed cofactor $c$)
 such that $N ≡ 0 \pmod{ℓ}$.
 
@@ -1030,19 +1045,21 @@ simultaneously for the curve and its quadratic twist.
 % is verifiable using~$O(\log ℓ) = O(\log \log p)$ operations in the base field;
 % else, $O(\log p)$~operations are needed.
 
-\subsubsection{(Almost) prime curve order}
+\subsubsection{Adequate curve order}
 
 When the algorithm finds that the value~$N$ is prime
 or only includes the allowed small cofactor $c$,
-a certificate is as follows: $(c, N/c, G, Π)$,
-where $N$~is the number of points, $c$~is the computed cofactor,
-$G$~is a point of order~$N$
-(for example, any random non-zero point if $N$ is prime),
+a certificate is as follows: $(N/c, G, Π)$,
+where $N$~is the number of points, $c$~is the expected cofactor,
+$G$~is a point of order~$N/c$
+(for example, any random non-zero point if $c = 1$ and $N$ is prime),
 and $Π$~is a proof of primality of~$N/c$
-(which may be left empty if $N$~is small enough
+(which may be left empty if $N/c$~is small enough
 that proving its primality directly is easier than using a certificate).
 The validation program then checks that $G ≠ 0$,
-$N · G = 0$, and~$N ≥ (√p-1)^2$.
+$(N/c) · G = 0$, adequate points of small order exist for the cofactor $c$
+(as $c$ is expected to be very small, this is a cheap operation),
+and~$N ≥ (√p-1)^2$.
 If this is the case, then $N$~is the curve order.
 
 For the sizes involved in elliptic curve cryptography,
@@ -1075,28 +1092,29 @@ and leads to a speed-up of~$≈ 4$ compared to the worst-case expectation.
 This has no apparent security implication
 since the final prime number is pseudo-random anyway;
 the only performance penalty is the cost of generating new primes,
-which is negligible to the cost of computing curve orders.
+which is negligible comparde with the cost of computing curve orders.
 
 
-\subsection{(Fundamental) discriminant and class group}
+\subsection{Discriminant and class group}
 
 The fundamental discriminant is given by
-the factorization of the discriminant~$D_K = t^2 - 4 p$.
+the factorization of the discriminant~$D_\phi = t^2 - 4 p$.
 While computing this factorization is quite expensive,
 (and asymptotically dominates the whole generation process),
 it will generally be performed only once, on the final curve,
 and validating the factorization is extremely easy.
-The same is true for the computation of the exact endomorphism
-ring $\ro O_E$ in case the curve has not prime order (recall that
-in this case $\ro O_E = \ro O_K$ and no additional computation has
-to be performed).
+The same is true for the subsequent computation of the exact endomorphism
+ring $\ro O_E$ and its discriminant $\Delta_E$
+in case the curve does not have prime order
+(recall that if the curve has prime order then $\ro O_E = \ro O_K$
+and no additional computation has to be performed).
 
-The knowledge of the fundamental discriminant gives a lower bound
+\smallskip
+
+The sole knowledge of the fundamental discriminant also gives a lower bound
 on the class number of the endomorphism field of~$E$
 and so on that of its endomorphism ring~$\ro O_E$.
 However, this bound is only approximately~$p^{1/4}/\log p$.
-
-\smallskip
 
 In some cases, a better (higher) lower bound~$B$ might be required.
 We can prove that the class number is greater than~$B$
@@ -1139,13 +1157,16 @@ the class number is not smooth.
 \subsection{Embedding degree}
 
 The embedding degree of~$E$ is the smallest integer~$e$
-such that $q$~divides~$p^{e-1}$;
-this is also the multiplicative order of~$p$ modulo~$q$.
-Computing this embedding degree requires factoring~$q-1$,
-which is in general a quite expensive computation.
+such that $q$~divides~$p^{e}-1$
+(that is the multiplicative order of~$p$ modulo~$q$).
+Computing exactly this embedding degree requires factoring~$q-1$
+and is an expensive computation.
 However, this factorization, which is the only expensive task
 in the computation of the embedding degree,
 is easy to include in the certificate.
+(If one only wants to check that the embedding degree
+is larger than a moderate bound $B$,
+brute-force might be sufficient.)
 
 We note that the embedding degree of the quadratic twist
 is distinct from that of the curve;
@@ -1164,7 +1185,7 @@ will not have any particular weakness.
 However, a malicious generating program, given enough computing resources,
 might be able to run the generating algorithm
 for a large family of seeds of a pseudo-random function
-until a suitable elliptic curve is found.
+until a suitable elliptic curve is found (see~\cite{badass}).
 
 Even though we think that a curve satisfying the normality conditions
 of section~\ref{ss:normal} will generally be as good as possible
@@ -1190,16 +1211,18 @@ or a number derived from stock market or sports results.
 \subsubsection{Certificate format}
 
 We suggest that the certificate should be separated in three parts.
+
 First, a header declares which choices were made:
 the sampling function, the seed (if applicable),
 as well as the subset of conditions retained from part~\ref{s:criteria}
-with the numeric values of these criteria.
+with the numerical values of these criteria.
 The validation program is then able,
 upon reading the header and prior to any computation,
 to determine if it accepts the included criteria.
 
 The second part of the certificate is the final, “good” curve,
 together with a proof for all the criteria.
+
 The last part is the list of sampled curves,
 each one accompanied by a proof for its rejection.
 The certificate should also include enough information about
@@ -1210,7 +1233,7 @@ to be able to retrace its execution.
 
 We chose the following sampling function as an example
 of “pseudo-random” curves.
-Starting from a seed~$s$, we define $p$~as the smallest prime~$≥ s$
+Starting from a seed~$s$, we define $p$~as the smallest prime greater than~$s$
 and $g$~as the smallest generator of the multipliative group~$(ℤ/pℤ)^{×}$.
 We then iterate over the curves with~$a = -3$ (\ref{sss:a=-3})
 of the form $y^2 = x^3 - 3 x + b$, where $b = g^n$ for~$n = 1, …$,
