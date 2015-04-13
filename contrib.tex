@@ -64,9 +64,9 @@ Sweden}}
 \sloppy
 \maketitle
 %\thispagestyle{fancy}\cfoot{}
-\lhead{\gitkw $Author:$}
-\chead{\gitkw $Id:$}
-\rhead{\gitkw $Date:$}
+%\lhead{\gitkw $Author:$}
+%\chead{\gitkw $Id:$}
+%\rhead{\gitkw $Date:$}
 % Introduction <<<1
 %<<<2
 Generating and standardizing elliptic curves to use them in a cryptographic
@@ -467,7 +467,7 @@ such as pseudo-Mersenne or generalized Mersenne numbers
 or values of cyclotomic polynomials~\cite{mc2013gm}.
 While the use of such prime numbers speeds up the modular arithmetic,
 they are also more vulnerable to some side-channel attacks%
-~\cite{ches2005dkj,ics2005ss,ches2014bpsy,eprint2014-434,ieice2006ss,indo2014frv}.
+~\cite{ches2005dkj,ics2005ss,ches2014bpsy,eprint2014psy,ieice2006ss,indo2014frv}.
 The use of a non-special, pseudo-random base field
 prevents this class of attacks.
 
@@ -625,7 +625,7 @@ Therefore, a large class number may prevent the use
 of any attacks based on complex multiplication.
 Under the generalized Riemann hypothesis,
 the best method we know to compute the class number
-is subexponential~\cite{ams1989hmc,chile2009biasse},
+is subexponential~\cite{ams1989hmc,amc2010biasse},
 and requires at least a few days of computation for cryptographic sizes.
 Since this method also computes the group stucture
 of the ideal class group of~$\ro O_E$,
@@ -650,7 +650,7 @@ by~$h(K) ≥ \frac{π}{3e} \frac{√{\abs{D_K}}}{\log \abs{D_K}}$.
 The class number has a negligible probability
 of being~$(\log p)^{1-o(1)}$-smooth.
 While the best known algorithms for computing the class number
-are sub-exponential~\cite{ams1989hmc,chile2009biasse},
+are sub-exponential~\cite{ams1989hmc,amc2010biasse},
 for any bound~$B$,
 it is possible to prove that $h$~is not $B$-smooth
 in time~$O(B \log p)$,
@@ -796,7 +796,7 @@ There exist several other representations of elliptic curves
 than Weierstraß coordinates, such as
 Edwards curves~\cite{ams2007edwards},
 twisted Edwards curves~\cite{africa2008bbjl},
-Jacobi curves~\cite{aaaaec2003bj},
+Jacobi curves~\cite{aaec2003bj},
 and Montgomery curves~\cite{mc1987montgomery}.
 Only a finite proportion of curves are isomorphic
 to a curve in these families.
@@ -809,7 +809,7 @@ the presence of a point of order two on the curve.
 This is a special point in the sense of~\ref{sss:special-points} above
 and could introduce a weakness in some implementations.
 The corresponding automorphisms also speed up the Pollard rho
-method for discrete logarithms by a small factor~\cite{moc2000glv}.
+method for discrete logarithms by a small factor~\cite{mc2000glv}.
 Moreover, in the case of a non-prime base field,
 there exist some attacks~\cite{jc2014fghr}
 against several of these curve families
@@ -857,16 +857,16 @@ to contradict the ``normality'' conditions of Section~\ref{ss:normal}.
 
 Some families of curves have an easily computable endomorphism.
 This allows a faster implementation of point multiplication%
-~\cite{crypto2001glv,joc2011gls}, with a theoretical gain of up to 50\%.
+~\cite{crypto2001glv,jc2011gls}, with a theoretical gain of up to 50\%.
 
 However, the construction of all these families
 relies on the fact that the discriminant
-of the endomorphism field is small~\cite{asia2013smith},
+of the endomorphism field is small~\cite{asia2013smith,corr2014smith},
 and is therefore in contradiction with paragraph~\ref{sss:discriminant}.
 
 Moreover, in the presence of an endomorphism of order~$m$,
 the Pollard rho method for computing discrete logarithms
-becomes faster by a factor of up to~$√m$~\cite{asia1999dgm,moc2000glv}.
+becomes faster by a factor of up to~$√m$~\cite{asia1999dgm,mc2000glv}.
 
 \subsubsection{Pairing-friendly curves}
 \label{sss:pairing}
@@ -875,7 +875,7 @@ Some families of elliptic curves allow a fast pairing computation.
 This construction has various applications in cryptography,
 such as one-round three-way key exchange~\cite{jc2004joux},
 short signatures~\cite{jc2004bls},
-and identity-based cryptography~\cite{crypto2001bf,el2002paterson}.
+and identity-based cryptography~\cite{crypto2001bf,el2002paterson,siam2003bf}.
 
 The main requirement for the existence of a fast pairing
 is that the embedding degree is small.
