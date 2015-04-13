@@ -209,6 +209,11 @@ or side-channel attacks~(\ref{sss:special-points}),
 it is a necessary condition for the availability
 of some faster curve coordinates
 such as Edwards or Montgomery curves~(\ref{sss:other-eq}).
+Also note that allowing a square cofactor might induce
+a non-cyclic structure on the group of rational points
+(e.g., if $c²$ divides the number of points and $c$ divides
+$p-1$, then the full $c$-torsion, which is of rank two,
+might be rational).
 
 \paragraph{Primality of the order of the quadratic twist.}
 In general, we expect that the order of the quadratic twist
@@ -507,7 +512,7 @@ on the final curve.
 Many common number-theoretic computations depend on
 the factorization of a parameter (for example, the order of some group),
 and become easier when this parameter is smooth
-(\emph{i.e.} when it has only small prime divisors).
+(i.e. when it has only small prime divisors).
 We recall here~\cite{jnt1983cep} that the probability that
 a number~$n$ be~$B$-smooth is approximately~$u^{-u}$,
 where $u ≃ \log n / \log B$.
@@ -694,7 +699,7 @@ In the case of the \emph{multiplicative} discrete logarithm problem,
 the Special Number Field Sieve allows faster computations
 of discrete logarithms modulo~$p$
 when $p$~is a \emph{special} prime number,
-\emph{i.e.} when it is a value of a polynomial of low degree
+i.e. when it is a value of a polynomial of low degree
 with small coefficients evaluated at a small value.
 
 It is hard to check whether a given (prime) number is special.
@@ -729,7 +734,7 @@ the embedding degree of~$E$ is at least~$p^{1/4 - o(1)}$.
 The multiplicative structure of the base field~$\F_p^{×}$
 is directly related to the factorization of~$p-1$.
 In particular, if $p-1$~is smooth
-(\emph{i.e.} all its prime divisors are small),
+(i.e. all its prime divisors are small),
 then the multiplicative discrete logarithm problem is easy.
 Let~$B$ be a smoothness bound: then, with~$u = \log p / \log B$,
 $(p-1)$~is $B$-smooth with probability~$≈ u^{-u}$~\cite{jnt1983cep}.
@@ -960,22 +965,33 @@ the curve order must be prime, or a prime number
 times a very small cofactor.
 This means that we expect that a linear number (in $\log p$)
 of curves will be rejected because of a composite group order,
-whereas the first curve found with a prime group order
-will be retained.
+whereas the first curve found with a prime
+(or only including the expected small cofactor)
+group order will be retained.
+Note that in a cryptographic context,
+when a small cofactor $c$ is allowed,
+it is usually because a special form of curve is used
+and therefore $N$ will automatically be divisible by $c$
+and $N/c$ an integer.
+We do not take into account the case where $c$ does not automatically
+divide the order of the tested curves though the following treatment
+can be easily be extended to deal with this situation.
 
 \subsubsection{Rejected curve order}
 
-In general, proving that the curve order,
-is not prime, or has a too large cofactor, is easy:
+In general, proving that the curve order
+is not prime, or has an unexpected cofactor, is easy:
 namely, if $n < 2 (√p-1)^2$ is a composite number coprime to~$c$
 and $P ≠ 0$~is a point such that~$n · P = 0$,
 then the curve order~$N$ has a composite factor coprime to~$c$.
 Namely, let~$d = \gcd (n, N)$; $d$~is coprime to~$c$.
 Since~$P≠0$, we have~$d≠1$.
 If~$d = N$ then $N$~divides~$n$ and is coprime to~$c$.
-Since $n/2$~exceeds the lower Hasse bound~$(√p-1)^2$,
-we see that~$N = n$, and therefore $N$~is composite.
-If on the other hand~$d ≠ N$, then $d$~is a strict divisor of~$N$.
+Since $n/2$~does not fit the lower Hasse bound~$(√p-1)^2$,
+we see that~$N = n$, and therefore $N$~is composite
+and coprime to $c$ (which had to be $1$).
+If on the other hand~$d ≠ N$, then $d$~is a strict divisor of~$N$
+coprime to $c$.
 
 The certificate is then the list~$(N/c, a, c · G)$,
 where $N$~is the computed curve order, $c$~is the cofactor,
@@ -984,16 +1000,37 @@ and $G$~is a random point (such that~$c · G ≠ 0$).
 
 \smallskip
 
-However, in practice, over a prime base field,
+Obstructions to producing such a certificate can occur
+when a cofactor $c \neq 1$ is allowed:
+the actual cofactor $d$ might be a product of small primes dividing $c$
+but still be different from $c$.
+Typically, $d$ will be a multiple of $c$
+and the group of points will be cyclic.
+It is then easy to produce a point $P$ of small order $e$
+dividing $d$ and a multiple of $c$, but also
+to check that $P$ has order exactly $e$;
+most other cases can be resolved in a similar way.
+The most problematic one is when $N = d² e q$, $d e = c$,
+$d > 1$, $e \geq 1$, and the full $d$-torsion is rational,
+because no rational point of small order greater than $c$ exists.
+Nevertheless, in this latter case, a certificate similar
+to the general case can still be be issued:~$(c q, a, c · G)$.
+The Hasse bound indeed ensures that $N / (cq) \neq 1$
+and the curve is not suitable.
+
+\smallskip
+
+In practice, it is possible to do better than above.
+Indeed, over a prime base field,
 the most efficient methods to compute the curve order are
 variants of the $ℓ$-adic SEA algorithm~\cite{mc1985schoof,
 jtnb1995schoof,smf2008cl}.
 This algorithm computes the order~$N$ of the curve
-by computing $N \pmod{ℓ}$ for several
-auxiliary primes~$ℓ < O(\log p)$.
+by computing $N \pmod{ℓ}$ (or $N \pmod{ℓ^k}$) for several
+auxiliary primes~$ℓ < O(\log p)$ (and small exponents $k$).
 The fact that $N$~is composite may therefore be detected
 in an early step,
-when there exists~$ℓ$ (not dividing an allowed cofactor $c$)
+when there exists~$ℓ$ (not dividing the allowed cofactor $c$)
 such that $N ≡ 0 \pmod{ℓ}$.
 
 It is also possible to benefit from this early detection
@@ -1015,6 +1052,8 @@ It is also possible, although slightly less efficient,
 to conform to the preceding certificate format
 by using the list~$(2 ℓ, 2, P)$,
 since $a = 2$~is a witness of composition for~$2ℓ$.}
+
+\smallskip
 
 We also note that, if the list of conditions
 include the primality of the twisted curve,
@@ -1063,7 +1102,7 @@ and $Π$~is a proof of primality of~$N/c$
 (which may be left empty if $N/c$~is small enough
 that proving its primality directly is easier than using a certificate).
 The validation program then checks that $G ≠ 0$,
-$(N/c) · G = 0$, adequate points of small order exist for the cofactor $c$
+$(N/c) · G = 0$, adequate points of small orders exist for the cofactor $c$
 (as $c$ is expected to be very small, this is a cheap operation),
 and~$N ≥ (√p-1)^2$.
 If this is the case, then $N$~is the curve order.
@@ -1334,7 +1373,7 @@ or of a family of elliptic curves, conforming both
 to the provable generation of Section~\ref{s:certif}
 and to the maximal security criteria of Section~\ref{s:criteria}
 and in particular of~\ref{ss:dlp}, \ref{ss:side} and~\ref{ss:normal},
-\emph{i.e.} with pseudo-random coefficients
+i.e. with pseudo-random coefficients
 modulo a pseudo-random prime,
 with a secure twist,
 and with a cofactor equal to one.
