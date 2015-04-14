@@ -460,7 +460,9 @@ in the sense of Section~\ref{ss:normal}.
 \label{sss:special-side}
 
 Some common parameter choices,
-such as the NIST elliptic curves~\cite{nist2000fips186-2},
+such as the NIST~\cite{nist2000fips186-2},
+Curve25519~\cite{pkc2006bernstein},
+and SM2~\cite{oscca2010sm2} elliptic curves,
 use as their base field a prime field~$\F_p$
 where $p$~is a prime number of a ``special form'',
 such as pseudo-Mersenne or generalized Mersenne numbers
@@ -971,11 +973,12 @@ group order will be retained.
 Note that in a cryptographic context,
 when a small cofactor $c$ is allowed,
 it is usually because a special form of curve is used
-and therefore $N$ will automatically be divisible by $c$
-and $N/c$ an integer.
+and therefore $N$ will always be divisible by $c$.
 We do not take into account the case where $c$ does not automatically
-divide the order of the tested curves though the following treatment
-can be easily be extended to deal with this situation.
+divide the order of the tested curves
+(or is just a bound on the allowed cofactor)
+though the following treatment can be easily be extended
+to deal with this situation.
 
 \subsubsection{Rejected curve order}
 
@@ -987,7 +990,7 @@ then the curve order~$N$ has a composite factor coprime to~$c$.
 Namely, let~$d = \gcd (n, N)$; $d$~is coprime to~$c$.
 Since~$P≠0$, we have~$d≠1$.
 If~$d = N$ then $N$~divides~$n$ and is coprime to~$c$.
-Since $n/2$~does not fit the lower Hasse bound~$(√p-1)^2$,
+Since $n/2$~does not meet the lower Hasse bound~$(√p-1)^2$,
 we see that~$N = n$, and therefore $N$~is composite
 and coprime to $c$ (which had to be $1$).
 If on the other hand~$d ≠ N$, then $d$~is a strict divisor of~$N$
@@ -1001,20 +1004,22 @@ and $G$~is a random point (such that~$c · G ≠ 0$).
 \smallskip
 
 Obstructions to producing such a certificate can occur
-when a cofactor $c \neq 1$ is allowed:
+when a cofactor $c \neq 1$ is expected:
 the actual cofactor $d$ might be a product of small primes dividing $c$
 but still be different from $c$.
 Typically, $d$ will be a multiple of $c$
 and the group of points will be cyclic.
 It is then easy to produce a point $P$ of small order $e$
-dividing $d$ and a multiple of $c$, but also
+a multiple of $c$ and dividing $d$, but also
 to check that $P$ has order exactly $e$;
 most other cases can be resolved in a similar way.
-The most problematic one is when $N = d² e q$, $d e = c$,
-$d > 1$, $e \geq 1$, and the full $d$-torsion is rational,
+The most problematic one is when $N = d² e q$, $q$ is prime,
+$d e = c$, $d > 1$, $e \geq 1$,
+and the full $d$-torsion is rational,
 because no rational point of small order greater than $c$ exists.
-Nevertheless, in this latter case, a certificate similar
-to the general case can still be be issued:~$(c q, a, c · G)$.
+Nevertheless, a certificate similar
+to the general case can still be be issued:~$(c q, a, G)$
+where $G$ has order $c q$.
 The Hasse bound indeed ensures that $N / (cq) \neq 1$
 and the curve is not suitable.
 
@@ -1350,14 +1355,17 @@ sketched out in Section~\ref{s:certif}.
 This is the case of the Brainpool family,
 where the sampling function generates
 curves defined over pseudo-random prime fields,
-with pseudo-random coefficients,
-with the slight reservation that the generating process does not include
-the condition that the order of the quadratic twist be
-prime~(\ref{sss:twist}).
-This is also the case of some curves with small coefficients,
+with pseudo-random coefficients.
+The only slight reservation about this family
+would be that the generating process does not
+include the condition that the order of the quadratic twist be
+prime~(\ref{sss:twist}) which makes the curves more generic,
+but implementations more error-prone.
+This is also the case of some curves with small coefficients%
+~\cite{pkc2006bernstein,msr2014bcln},
 where the sampling function generates the coefficients
 in increasing order.
-However, since these curves are, by construction,
+However, since these latter curves are, by construction,
 defined over special prime fields
 and since they also have small coefficients,
 they may be threatened in the sense of Section~\ref{ss:side}
@@ -1367,7 +1375,7 @@ also have a cofactor strictly greater than one.
 
 \bigbreak
 
-We therefore point out that, to our knowledge,
+We point out that, to our knowledge,
 there does not exist yet any public proposal of an elliptic curve,
 or of a family of elliptic curves, conforming both
 to the provable generation of Section~\ref{s:certif}
@@ -1377,6 +1385,7 @@ i.e. with pseudo-random coefficients
 modulo a pseudo-random prime,
 with a secure twist,
 and with a cofactor equal to one.
+We therefore think it is advisable to standardize (a family of) such curves.
 
 \bibliographystyle{plain}
 \bibliography{contrib}
