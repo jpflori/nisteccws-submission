@@ -13,8 +13,44 @@
 \usepackage{indentfirst}
 \usepackage{hyperref}
 \usepackage{fancyhdr}
+\usepackage[flushmargin,hang]{footmisc}
 \hypersetup{colorlinks,urlcolor=[rgb]{.1,.1,.6},
   linkcolor=[rgb]{.5,.0,.2}, citecolor=[rgb]{.2,.0,.4}}
+
+\makeatletter
+\def\maketitle{\par
+  \begingroup
+    \renewcommand\thefootnote{\@fnsymbol\c@footnote}%
+    \def\@makefnmark{{\@textsuperscript{\normalfont\@thefnmark}}}%
+%     \long\def\@makefntext##1{\parindent 1em\noindent
+%             \llap{\normalfont\@thefnmark}##1}%
+    \if@twocolumn
+      \ifnum \col@number=\@ne
+        \@maketitle
+      \else
+        \twocolumn[\@maketitle]%
+      \fi
+    \else
+      \newpage
+      \global\@topnum\z@   % Prevents figures from going at top of page.
+      \@maketitle
+    \fi
+    \thispagestyle{plain}\@thanks
+  \endgroup
+  \setcounter{footnote}{0}%
+  \global\let\thanks\relax
+  \global\let\maketitle\relax
+  \global\let\@maketitle\relax
+  \global\let\@thanks\@empty
+  \global\let\@author\@empty
+  \global\let\@date\@empty
+  \global\let\@title\@empty
+  \global\let\title\relax
+  \global\let\author\relax
+  \global\let\date\relax
+  \global\let\and\relax
+}
+\makeatother
 
 \def\F{\mathbb{F}}
 \let\ro\mathcal
