@@ -125,11 +125,11 @@ curves
 and the emergence of the need to standardize new curves.
 Different parties have spoken their point of view on the (dis)trust they have
 on previously standardized curves whether it is because of
-the properties they verify or don't verify
+the properties they satisfy or don't satisfy
 or the process used to generate them.
 Such analyses often come with
 a list of security and performance/implementation-related criteria
-a curve should verify,
+a curve should satisfy,
 and a proposal on how to correctly generate such a curve in a way that can be
 trusted~\cite{safecurves,msr2014bcln,brainpool2005,eprint2014brainpool,eprint2013abgr},
 together with a proposal of such a correctly generated
@@ -171,13 +171,13 @@ For ECC to be trusted and widely adopted, \emph{diversity} is needed.
 
 \medskip
 %<<<2
-Secondly, even when a curve verifies all common security criteria,
+Secondly, even when a curve satisfies all common security criteria,
 whether it is completely generic, or with a few speed-optimized parameters,
 another criterion for inclusion in international standards is that
 one should know all the details about how the curve was generated,
 and be able to verify that the
 generation process actually ended up with the claimed curve
-and not anoher one in the same family verifying the same conditions.
+and not anoher one in the same family satisfying the same conditions.
 Much has been said on this matter~\cite{safecurves,msr2014bcln,eprint2014brainpool,eprint2013abgr},
 but as will become clear in the next sections, some arbitrary choices always have
 to be made: one has to fix some bounds,
@@ -534,7 +534,7 @@ in light of~\ref{sss:small-subgroup} or~\ref{sss:special-points} above.
 % Intro%<<<
 The criteria we present here do not correspond to
 known attacks on elliptic curves.
-Rather, they are properties that random curves should verify
+Rather, they are properties that random curves should satisfy
 with overwhelming probability.
 When generating curves, checking for these conditions
 should reject a negligible proportion of curves.
@@ -544,7 +544,7 @@ this curve is slightly more likely to be vulnerable.
 
 More concretely this means that during the process of generating
 a secure curve, in general, curves will be discarded
-because they don't verify one of the criteria of Section~\ref{ss:dlp}.
+because they don't satisfy one of the criteria of Section~\ref{ss:dlp}.
 When a curve passes the checks for these criteria,
 the computations needed for the criteria of the current section
 will be performed and will also pass with overwhelming probability.
